@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全文件加密解密系统 - 增强版</title>
+    <title>安全文件加密解密系统 - 文件格式修复版</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
     <style>
         :root {
             --primary: #4285f4;
@@ -87,18 +88,6 @@
             box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .tab.tool.active {
-            color: var(--tool-color);
-        }
-        
-        .tab.help.active {
-            color: var(--help-color);
-        }
-        
-        .tab.converter.active {
-            color: var(--converter-color);
-        }
-        
         .main-content {
             padding: 30px;
         }
@@ -127,22 +116,6 @@
             align-items: center;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--light);
-        }
-        
-        .card-title.tool {
-            color: var(--tool-color);
-        }
-        
-        .card-title.help {
-            color: var(--help-color);
-        }
-        
-        .card-title.converter {
-            color: var(--converter-color);
-        }
-        
-        .card-title.author {
-            color: var(--author-color);
         }
         
         .card-title i {
@@ -435,16 +408,15 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
-
-        .uuid-display { /* 修正这里 */
-        flex-grow: 1;
-        padding: 15px;
-        background: #f8f9fa;
-        font-family: monospace;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 16px;
+        .uuid-display {
+            flex-grow: 1;
+            padding: 15px;
+            background: #f8f9fa;
+            font-family: monospace;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
         }
         
         .uuid-copy-btn {
@@ -908,7 +880,7 @@
                             <div class="ip-info-value" id="ip-isp">正在获取...</div>
                         </div>
                         
-                        <div class="ip-info-box">
+                        <div class="ip-info-box"> 
                             <div class="ip-info-title">浏览器信息</div>
                             <div class="ip-info-value" id="browser-info">正在获取...</div>
                         </div>
@@ -1040,7 +1012,7 @@
                             <ol>
                                 <li>切换到"加密文本"标签页</li>
                                 <li>在文本框中输入要加密的内容</li>
-                                <li>设置输出文件名（默认为secret_file.dzj2）</li>
+                                <极>设置输出文件名（默认为secret_file.dzj2）</li>
                                 <li>添加授权设备ID（多个ID用逗号分隔）</li>
                                 <li>点击"开始加密"按钮</li>
                                 <li>加密完成后点击"下载加密文件"</li>
@@ -1093,7 +1065,7 @@
                             <p>可能的原因包括：</p>
                             <ul>
                                 <li>当前设备不在授权设备列表中</li>
-                                <li>文件在传输过程中损坏</li>
+                                <li>文件在传输过程中损坏</极>
                                 <li>文件格式不正确（必须是.dzj2格式）</li>
                                 <li>设备ID发生变化（清除浏览器缓存可能导致ID变化）</li>
                             </ul>
@@ -1169,1188 +1141,1123 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            // 中文文本
+            const translations = {
+                'app-title': '安全文件加密解密系统',
+                'device-id-label': '设备ID',
+                'platform-label': '平台',
+                'file-label': '选择加密文件 (.dzj2)',
+                'file-text': '点击或拖放文件到此处',
+                'decrypt-btn': '开始解密',
+                'status-waiting': '等待操作...',
+                'status-selected': '文件已选择: ',
+                'status-reading': '正在读取文件...',
+                'status-decrypting': '正在解密数据...',
+                'status-saving': '正在保存文件...',
+                'status-success': '解密成功!',
+                'status-error': '解密失败: ',
+                'result-success': '文本已成功解密!',
+                'copy-btn': '复制文本',
+                'reset-btn': '处理新文件',
+                'footer-text': '安全文件加密解密系统 v2.8 | DZJ2 加密解决方案',
+                'error-invalid-file': '无效的DZJ2文件格式',
+                'error-device-id': '无法获取设备ID',
+                'error-unauthorized': '当前设备未授权访问此文件',
+                'error-decrypt': '解密过程中发生错误',
+                'error-json': 'JSON解析失败',
+                'error-garbled': 'JSON解析失败 - 输出乱码',
+                'error-no-file': '请先选择加密文件',
+                'error-unknown': '发生未知错误',
+                'copy-success': '文本已复制到剪贴板',
+                'copy-error': '复制失败，请手动复制',
+                'uuid-copied': '设备ID已复制',
+                'authorized-devices': '授权设备列表:',
+                'authorized-device': '授权设备:',
+                'authorized-none': '此文件未设置设备限制',
+                'authorized-error': '无法验证授权状态',
+                'text-input-label': '输入要加密的文本',
+                'file-name-label': '输出文件名',
+                'authorized-devices-label': '授权设备ID列表 (用逗号分隔)',
+                'encrypt-btn': '开始加密',
+                'encrypt-status-waiting': '等待操作...',
+                'encrypt-status-processing': '正在加密数据...',
+                'encrypt-status-success': '加密成功!',
+                'encrypt-status-error': '加密失败: ',
+                'encrypt-result-success': '文件已成功加密!',
+                'download-btn': '下载加密文件',
+                'reset-encrypt-btn': '创建新文件',
+                'ip-status-waiting': '点击下方按钮获取IP信息',
+                'ip-status-fetching': '正在获取IP信息...',
+                'ip-status-success': 'IP信息获取成功!',
+                'ip-status-error': '获取IP信息失败: ',
+                'network-status-waiting': '点击下方按钮开始测试',
+                'network-status-testing': '正在测试网络连接...',
+                'network-status-success': '网络测试完成!',
+                'network-status-error': '网络测试失败: ',
+                'converter-file-text': '点击或拖放文件到此处',
+                'converter-status-waiting': '等待操作...',
+                'converter-status-processing': '正在转换文件...',
+                'converter-status-success': '转换成功!',
+                'converter-status-error': '转换失败: ',
+                'converter-result-success': '文件已成功转换!',
+                'download-converted-btn': '下载转换文件',
+                'reset-converter-btn': '转换新文件',
+                'error-no-file': '请先选择文件',
+                'error-unsupported-format': '不支持的文件格式',
+                'error-conversion': '转换过程中发生错误',
+                'current-format': '当前格式: '
+            };
+        
+            // 存储设备ID
+            let deviceId = '';
+        
+            // 更新界面文本
+            function updateTexts() {
+                document.getElementById('app-title').textContent = translations['app-title'];
+                document.getElementById('footer-text').textContent = translations['footer-text'];
+                document.getElementById('status-text').textContent = translations['status-waiting'];
+                document.getElementById('encrypt-status-text').textContent = translations['encrypt-status-waiting'];
+                document.getElementById('ip-status-text').textContent = translations['ip-status-waiting'];
+                document.getElementById('network-status-text').textContent = translations['network-status-waiting'];
+                document.getElementById('converter-status-text').textContent = translations['converter-status-waiting'];
+                document.getElementById('converter-file-text').textContent = translations['converter-file-text'];
+                document.getElementById('current-format').textContent = translations['current-format'] + '未选择文件';
+            }
+        
+            // 标签切换功能
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 更新标签状态
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 显示对应内容
+                    const tabId = tab.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+                    
+                    // 重置结果区域
+                    document.getElementById('result-section').classList.add('hidden');
+                    document.getElementById('encrypt-result-section').classList.add('hidden');
+                    document.getElementById('converter-result-section').classList.add('hidden');
+                });
+            });
+        
+            // 获取设备ID - 修复UUID生成机制
+            async function getDeviceId() {
+                try {
+                    // 尝试从本地存储获取设备ID
+                    const storedDeviceId = localStorage.getItem('secure_device_id');
+                    if (storedDeviceId) {
+                        return storedDeviceId;
+                    }
+                    
+                    // 使用更简单的方法生成ID
+                    const fallbackInfo = [
+                        navigator.userAgent,
+                        navigator.platform,
+                        screen.width,
+                        screen.height,
+                        navigator.languages[0],
+                        new Date().getTime()
+                    ].join('|');
+                    
+                    let hash = 0;
+                    for (let i = 0; i < fallbackInfo.length; i++) {
+                        const char = fallbackInfo.charCodeAt(i);
+                        hash = (hash << 5) - hash + char;
+                        hash = hash & hash; // 转换为32位整数
+                    }
+                    const deviceId = 'sec-' + Math.abs(hash).toString(36);
+                    
+                    // 存储设备ID
+                    localStorage.setItem('secure_device_id', deviceId);
+                    
+                    return deviceId;
+                } catch (e) {
+                    console.error('获取设备ID错误:', e);
+                    return generateFallbackId();
+                }
+            }
+        
+            // 备用设备ID生成方法
+            function generateFallbackId() {
+                // 使用更简单的方法生成ID
+                const fallbackInfo = [
+                    navigator.userAgent,
+                    navigator.platform,
+                    screen.width,
+                    screen.height,
+                    navigator.languages[0]
+                ].join('|');
+                
+                let hash = 0;
+                for (let i = 0; i < fallbackInfo.length; i++) {
+                    const char = fallbackInfo.charCodeAt(i);
+                    hash = (hash << 5) - hash + char;
+                    hash = hash & hash; // 转换为32位整数
+                }
+                return 'sec-' + Math.abs(hash).toString(36);
+            }
+        
+            // 更新设备信息
+            async function updateDeviceInfo() {
+                try {
+                    deviceId = await getDeviceId();
+                    const platform = navigator.platform;
+                    
+                    // 更新设备ID显示
+                    document.getElementById('device-id').textContent = deviceId;
+                    document.getElementById('device-id-encrypt').textContent = deviceId;
+                    
+                    // 更新平台信息
+                    document.getElementById('platform').value = platform;
+                } catch (e) {
+                    console.error('更新设备信息错误:', e);
+                    document.getElementById('device-id').textContent = translations['error-device-id'];
+                    document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
+                    document.getElementById('platform').value = '未知';
+                }
+            }
+        
+            // 文件选择处理
+            const fileInput = document.getElementById('encrypted-file');
+            const fileNameDisplay = document.getElementById('file-name');
+            const decryptBtn = document.getElementById('decrypt-btn');
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    fileNameDisplay.textContent = translations['status-selected'] + file.name;
+                    fileNameDisplay.classList.remove('hidden');
+                    decryptBtn.disabled = false;
+                    
+                    // 重置授权设备显示
+                    document.getElementById('authorized-devices').classList.add('hidden');
+                }
+            });
+        
+            // 拖放文件支持
+            const fileInputLabel = document.querySelector('.file-input-label');
+            
+            fileInputLabel.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileInputLabel.style.background = '#e8f0fe';
+                fileInputLabel.style.borderColor = '#4285f4';
+            });
+            
+            fileInputLabel.addEventListener('dragleave', () => {
+                fileInputLabel.style.background = '';
+                fileInputLabel.style.borderColor = '';
+            });
+            
+            fileInputLabel.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileInputLabel.style.background = '';
+                fileInputLabel.style.borderColor = '';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        
+            // 解密功能
+            decryptBtn.addEventListener('click', async () => {
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    showStatus(translations['error-no-file'], true);
+                    return;
+                }
+                
+                // 显示进度条
+                const progressContainer = document.getElementById('progress-container');
+                const progressBar = document.getElementById('progress-bar');
+                const progressText = document.getElementById('progress-text');
+                progressContainer.classList.remove('hidden');
+                
+                try {
+                    // 1. 读取文件
+                    showStatus(translations['status-reading']);
+                    updateProgress(10);
+                    
+                    const fileData = await readFileAsArrayBuffer(file);
+                    updateProgress(30);
+                    
+                    // 2. 解密文件
+                    showStatus(translations['status-decrypting']);
+                    updateProgress(50);
+                    
+                    // 使用全局存储的deviceId
+                    if (!deviceId) {
+                        throw new Error(translations['error-device-id']);
+                    }
+                    
+                    const decryptedData = await secureDecrypt(fileData, deviceId);
+                    updateProgress(80);
+                    
+                    // 3. 显示文本内容
+                    showStatus(translations['status-success']);
+                    updateProgress(90);
+                    
+                    const textContent = new TextDecoder('utf-8').decode(decryptedData);
+                    updateProgress(100);
+                    
+                    // 显示结果
+                    const resultSection = document.getElementById('result-section');
+                    const resultIcon = document.getElementById('result-icon');
+                    const resultText = document.getElementById('result-text');
+                    const textDisplay = document.getElementById('text-display');
+                    
+                    resultIcon.textContent = '✓';
+                    resultIcon.className = 'result-icon';
+                    resultText.textContent = translations['result-success'];
+                    textDisplay.textContent = textContent;
+                    resultSection.classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('解密错误:', error);
+                    showStatus(translations['status-error'] + error.message, true);
+                    updateProgress(0);
+                    
+                    // 显示错误结果
+                    const resultSection = document.getElementById('result-section');
+                    const resultIcon = document.getElementById('result-icon');
+                    const resultText = document.getElementById('result-text');
+                    
+                    resultIcon.textContent = '✗';
+                    resultIcon.className = 'result-icon error';
+                    resultText.textContent = translations['status-error'] + error.message;
+                    resultSection.classList.remove('hidden');
+                }
+            });
+        
+            // 安全解密函数 - 完整实现
+            async function secureDecrypt(encryptedData, deviceId) {
+                const authorizedDevices = document.getElementById('authorized-devices');
+                
+                try {
+                    // 1. 检查文件头
+                    const header = new Uint8Array(encryptedData, 0, 3);
+                    const actualHeader = String.fromCharCode(header[0], header[1], header[2]);
+                    if (actualHeader !== 'DZ2') {
+                        throw new Error(translations['error-invalid-file'] + ` (实际文件头: ${actualHeader})`);
+                    }
+                    
+                    // 2. 解析数据长度
+                    const dataView = new DataView(encryptedData);
+                    const layer2Length = dataView.getUint32(3, false); // 从第4字节开始
+                    const layer1Length = dataView.getUint32(7, false); // 从第8字节开始
+                    
+                    // 3. 检查文件总长度
+                    const totalHeaderLength = 11; // 3字节文件头 + 4字节第二层长度 + 4字节第一层长度
+                    if (encryptedData.byteLength < totalHeaderLength + layer2Length + layer1Length) {
+                        throw new Error(translations['error-invalid-file'] + ` (文件大小不足，需要${totalHeaderLength + layer2Length + layer1Length}字节，实际${encryptedData.byteLength}字节)`);
+                    }
+                    
+                    // 4. 提取两层数据
+                    const layer2Encrypted = new Uint8Array(encryptedData, 11, layer2Length);
+                    const layer1Encrypted = new Uint8Array(encryptedData, 11 + layer2Length, layer1Length);
+                    
+                    // 5. 解密第二层 (UUID层)
+                    const deviceHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(deviceId));
+                    const deviceHashBytes = new Uint8Array(deviceHash);
+                    const layer2Key = deviceHashBytes.slice(0, 16);
+                    const layer2Iv = deviceHashBytes.slice(16, 32);
+                    
+                    const layer2Decrypted = xorDecrypt(layer2Encrypted, [...layer2Key, ...layer2Iv]);
+                    
+                    // 6. 尝试解析JSON
+                    let layer2Data;
+                    let rawLayer2Data = new TextDecoder().decode(layer2Decrypted);
+                    
+                    // 检测乱码
+                    if (isGarbledText(rawLayer2Data)) {
+                        throw new Error(translations['error-garbled']);
+                    }
+                    
+                    try {
+                        layer2Data = JSON.parse(rawLayer2Data);
+                    } catch (e) {
+                        // 如果解析失败，尝试修复JSON格式
+                        try {
+                            const fixedText = rawLayer2Data
+                                .replace(/'/g, '"') // 替换单引号为双引号
+                                .replace(/,\s*}/g, '}') // 修复多余的逗号
+                                .replace(/,\s*]/g, ']') // 修复多余的逗号
+                                .replace(/\\"/g, '"') // 处理转义双引号
+                                .replace(/\\n/g, '') // 处理换行符
+                                .replace(/\\r/g, '') // 处理回车符
+                                .replace(/\\t/g, '') // 处理制表符
+                                .replace(/\\u([\d\w]{4})/gi, (match, grp) => {
+                                    return String.fromCharCode(parseInt(grp, 16));
+                                }); // 处理Unicode转义
+                            
+                            layer2Data = JSON.parse(fixedText);
+                        } catch (e2) {
+                            console.error('JSON解析失败，原始数据:', rawLayer2Data.substring(0, 100));
+                            throw new Error(translations['error-json'] + ' - 数据格式无效');
+                        }
+                    }
+                    
+                    // 7. 显示授权设备
+                    authorizedDevices.textContent = translations['authorized-devices'];
+                    layer2Data.authorized_uuids.forEach(uuid => {
+                        authorizedDevices.textContent += `\n- ${uuid.substring(0, 12)}...`;
+                    });
+                    authorizedDevices.classList.remove('hidden');
+                    
+                    // 8. 验证设备授权
+                    const currentUpper = deviceId.toUpperCase();
+                    let authorized = false;
+                    for (const uuid of layer2Data.authorized_uuids) {
+                        if (uuid.toUpperCase() === currentUpper) {
+                            authorized = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!authorized) {
+                        throw new Error(translations['error-unauthorized']);
+                    }
+                    
+                    // 9. 解密第一层 (数据层)
+                    const layer1Key = base64ToArrayBuffer(layer2Data.key);
+                    const layer1Iv = base64ToArrayBuffer(layer2Data.iv);
+                    const compressedData = xorDecrypt(layer1Encrypted, [...layer1Key, ...layer1Iv]);
+                    
+                    // 10. 解压缩数据
+                    try {
+                        const decompressed = pako.inflate(compressedData);
+                        return decompressed;
+                    } catch (e) {
+                        throw new Error(translations['error-decrypt']);
+                    }
+                } catch (error) {
+                    console.error('完整解密错误:', error);
+                    throw error;
+                }
+            }
+        
+            // 检测乱码文本
+            function isGarbledText(text) {
+                // 检测文本中非打印字符的比例
+                let nonPrintableCount = 0;
+                for (let i = 0; i < text.length; i++) {
+                    const charCode = text.charCodeAt(i);
+                    // 非打印字符: 控制字符 (0-31) 和删除字符 (127)
+                    if (charCode < 32 || charCode === 127) {
+                        nonPrintableCount++;
+                    }
+                }
+                
+                // 如果非打印字符超过文本长度的30%，则认为是乱码
+                return (nonPrintableCount / text.length) > 0.3;
+            }
+        
+            // 加密功能
+            document.getElementById('encrypt-btn').addEventListener('click', async () => {
+                const textInput = document.getElementById('text-input').value;
+                const outputFilename = document.getElementById('output-filename').value || 'encrypted_file.dzj2';
+                const authorizedUuidsInput = document.getElementById('authorized-uuids').value;
+                
+                if (!textInput) {
+                    showEncryptStatus(translations['error-no-text'], true);
+                    return;
+                }
+                
+                // 显示进度条
+                const progressContainer = document.getElementById('encrypt-progress-container');
+                const progressBar = document.getElementById('encrypt-progress-bar');
+                const progressText = document.getElementById('encrypt-progress-text');
+                progressContainer.classList.remove('hidden');
+                
+                try {
+                    // 1. 准备数据
+                    showEncryptStatus(translations['encrypt-status-processing']);
+                    updateEncryptProgress(10);
+                    
+                    // 使用全局存储的deviceId
+                    if (!deviceId) {
+                        throw new Error(translations['error-device-id']);
+                    }
+                    
+                    // 解析授权UUID列表
+                    let authorizedUuids = [];
+                    if (authorizedUuidsInput) {
+                        authorizedUuids = authorizedUuidsInput.split(',')
+                            .map(uuid => uuid.trim())
+                            .filter(uuid => uuid.length > 0);
+                    }
+                    
+                    // 默认包含当前设备
+                    if (!authorizedUuids.includes(deviceId)) {
+                        authorizedUuids.push(deviceId);
+                    }
+                    
+                    // 2. 加密数据
+                    updateEncryptProgress(30);
+                    const encryptedData = await secureEncrypt(textInput, deviceId, authorizedUuids);
+                    updateEncryptProgress(70);
+                    
+                    // 3. 创建Blob并下载
+                    const blob = new Blob([encryptedData], {type: 'application/octet-stream'});
+                    const url = URL.createObjectURL(blob);
+                    
+                    // 保存下载链接
+                    window.encryptedFileUrl = url;
+                    window.encryptedFileName = outputFilename;
+                    
+                    updateEncryptProgress(100);
+                    showEncryptStatus(translations['encrypt-status-success']);
+                    
+                    // 显示结果
+                    const resultSection = document.getElementById('encrypt-result-section');
+                    const resultIcon = document.getElementById('encrypt-result-icon');
+                    const resultText = document.getElementById('encrypt-result-text');
+                    
+                    resultIcon.textContent = '✓';
+                    resultIcon.className = 'result-icon';
+                    resultText.textContent = translations['encrypt-result-success'];
+                    resultSection.classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('加密错误:', error);
+                    showEncryptStatus(translations['encrypt-status-error'] + error.message, true);
+                    updateEncryptProgress(0);
+                }
+            });
+        
+            // 安全加密函数 - 修复文件格式问题
+            async function secureEncrypt(text, deviceId, authorizedUuids) {
+                try {
+                    const encoder = new TextEncoder();
+                    
+                    // 1. 准备原始数据
+                    const textData = encoder.encode(text);
+                    
+                    // 2. 压缩数据
+                    const compressedData = pako.deflate(textData);
+                    
+                    // 3. 生成第一层加密密钥和IV
+                    const layer1Key = crypto.getRandomValues(new Uint8Array(16));
+                    const layer1Iv = crypto.getRandomValues(new Uint8Array(16));
+                    
+                    // 4. 第一层加密
+                    const layer1Encrypted = xorDecrypt(compressedData, [...layer1Key, ...layer1Iv]);
+                    
+                    // 5. 构建第二层数据包
+                    const layer2Data = {
+                        key: arrayBufferToBase64(layer1Key),
+                        iv: arrayBufferToBase64(layer1Iv),
+                        authorized_uuids: authorizedUuids,
+                        signature: await generateSignature(authorizedUuids.join(','))
+                    };
+                    
+                    // 6. 序列化JSON数据
+                    let layer2Json;
+                    try {
+                        // 使用JSON.stringify生成JSON
+                        layer2Json = JSON.stringify(layer2Data, null, 2);
+                        
+                        // 验证JSON有效性
+                        JSON.parse(layer2Json);
+                    } catch (e) {
+                        // 如果JSON无效，尝试修复
+                        try {
+                            // 使用更安全的方法生成JSON
+                            layer2Json = JSON.stringify(layer2Data, (key, value) => {
+                                if (typeof value === 'string') {
+                                    // 移除控制字符和无效字符
+                                    return value.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+                                }
+                                return value;
+                            });
+                            
+                            // 再次验证
+                            JSON.parse(layer2Json);
+                        } catch (e2) {
+                            console.error('生成的JSON无效:', layer2Data);
+                            throw new Error('生成的授权信息JSON无效');
+                        }
+                    }
+                    
+                    // 7. 编码JSON数据为UTF-8
+                    const layer2Encoded = encoder.encode(layer2Json);
+                    
+                    // 8. 生成第二层加密密钥
+                    const deviceHash = await crypto.subtle.digest('SHA-256', encoder.encode(deviceId));
+                    const deviceHashBytes = new Uint8Array(deviceHash);
+                    const layer2Key = deviceHashBytes.slice(0, 16);
+                    const layer2Iv = deviceHashBytes.slice(16, 32);
+                    
+                    // 9. 第二层加密
+                    const layer2Encrypted = xorDecrypt(layer2Encoded, [...layer2Key, ...layer2Iv]);
+                    
+                    // 10. 构建文件结构 - 修复文件格式
+                    const header = encoder.encode('DZ2');
+                    const totalLength = 11 + layer2Encrypted.length + layer1Encrypted.length;
+                    const encryptedData = new Uint8Array(totalLength);
+                    
+                    let offset = 0;
+                    
+                    // 添加文件头 (3字节)
+                    encryptedData.set(header, offset);
+                    offset += header.length;
+                    
+                    // 使用DataView写入长度信息 (大端序)
+                    const dataView = new DataView(encryptedData.buffer);
+                    dataView.setUint32(offset, layer2Encrypted.length, false);
+                    offset += 4;
+                    
+                    dataView.setUint32(offset, layer1Encrypted.length, false);
+                    offset += 4;
+                    
+                    // 添加第二层加密数据
+                    encryptedData.set(layer2Encrypted, offset);
+                    offset += layer2Encrypted.length;
+                    
+                    // 添加第一层加密数据
+                    encryptedData.set(layer1Encrypted, offset);
+                    
+                    return encryptedData;
+                } catch (error) {
+                    console.error('加密错误:', error);
+                    throw error;
+                }
+            }
+        
+            // 异或加密函数
+            function xorDecrypt(data, key) {
+                const result = new Uint8Array(data.length);
+                for (let i = 0; i < data.length; i++) {
+                    result[i] = data[i] ^ key[i % key.length];
+                }
+                return result;
+            }
+        
+            // 生成签名
+            async function generateSignature(data) {
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(data);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+                return arrayBufferToBase64(hashBuffer);
+            }
+        
+            // 下载加密文件
+            document.getElementById('download-btn').addEventListener('click', () => {
+                if (!window.encryptedFileUrl) {
+                    showEncryptStatus(translations['error-no-file'], true);
+                    return;
+                }
+                
+                const a = document.createElement('a');
+                a.href = window.encryptedFileUrl;
+                
+                // 确保下载文件扩展名为.dzj2
+                let filename = window.encryptedFileName || 'encrypted_file.dzj2';
+                if (!filename.toLowerCase().endsWith('.dzj2')) {
+                    filename += '.dzj2';
+                }
+                
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(window.encryptedFileUrl);
+                
+                showEncryptStatus(translations['download-btn'] + ' ' + translations['encrypt-status-success']);
+            });
+        
+            // 复制设备ID功能
+            document.getElementById('copy-uuid-btn').addEventListener('click', () => {
+                const deviceId = document.getElementById('device-id').textContent;
+                
+                try {
+                    navigator.clipboard.writeText(deviceId).then(() => {
+                        showStatus(translations['uuid-copied']);
+                    }).catch(() => {
+                        showStatus(translations['copy-error'], true);
+                    });
+                } catch (e) {
+                    showStatus(translations['copy-error'], true);
+                }
+            });
+        
+            // 复制设备ID功能 (加密页)
+            document.getElementById('copy-uuid-btn-encrypt').addEventListener('click', () => {
+                const deviceId = document.getElementById('device-id-encrypt').textContent;
+                
+                try {
+                    navigator.clipboard.writeText(deviceId).then(() => {
+                        showEncryptStatus(translations['uuid-copied']);
+                    }).catch(() => {
+                        showEncryptStatus(translations['copy-error'], true);
+                    });
+                } catch (e) {
+                    showEncryptStatus(translations['copy-error'], true);
+                }
+            });
+        
+            // 复制文本功能
+            document.getElementById('copy-btn').addEventListener('click', () => {
+                const textDisplay = document.getElementById('text-display');
+                
+                try {
+                    const text = textDisplay.textContent;
+                    navigator.clipboard.writeText(text).then(() => {
+                        showStatus(translations['copy-success']);
+                    }).catch(() => {
+                        showStatus(translations['copy-error'], true);
+                    });
+                } catch (e) {
+                    showStatus(translations['copy-error'], true);
+                }
+            });
+        
+            // 重置按钮
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                // 重置表单
+                fileInput.value = '';
+                fileNameDisplay.classList.add('hidden');
+                decryptBtn.disabled = true;
+                
+                // 隐藏结果区域
+                document.getElementById('result-section').classList.add('hidden');
+                
+                // 隐藏进度条
+                document.getElementById('progress-container').classList.add('hidden');
+                
+                // 隐藏授权设备信息
+                document.getElementById('authorized-devices').classList.add('hidden');
+                
+                // 重置状态
+                showStatus(translations['status-waiting']);
+            });
+        
+            // 重置加密按钮
+            document.getElementById('reset-encrypt-btn').addEventListener('click', () => {
+                // 重置表单
+                document.getElementById('text-input').value = '';
+                document.getElementById('output-filename').value = '';
+                document.getElementById('authorized-uuids').value = '';
+                
+                // 隐藏结果区域
+                document.getElementById('encrypt-result-section').classList.add('hidden');
+                
+                // 隐藏进度条
+                document.getElementById('encrypt-progress-container').classList.add('hidden');
+                
+                // 重置状态
+                showEncryptStatus(translations['encrypt-status-waiting']);
+            });
+        
+            // IP地址工具
+            document.getElementById('get-ip-btn').addEventListener('click', async () => {
+                const ipContainer = document.getElementById('ip-info-container');
+                const publicIp = document.getElementById('public-ip');
+                const ipLocation = document.getElementById('ip-location');
+                const ipIsp = document.getElementById('ip-isp');
+                const browserInfo = document.getElementById('browser-info');
+                
+                try {
+                    // 显示加载状态
+                    document.getElementById('ip-status-text').textContent = translations['ip-status-fetching'];
+                    
+                    // 获取IP信息
+                    const response = await fetch('https://ipapi.co/json/');
+                    const data = await response.json();
+                    
+                    // 更新IP信息
+                    publicIp.textContent = data.ip;
+                    ipLocation.textContent = `${data.city}, ${data.region}, ${data.country_name}`;
+                    ipIsp.textContent = data.org;
+                    browserInfo.textContent = navigator.userAgent;
+                    
+                    // 显示结果
+                    ipContainer.classList.remove('hidden');
+                    document.getElementById('ip-status-text').textContent = translations['ip-status-success'];
+                    
+                } catch (error) {
+                    console.error('获取IP信息错误:', error);
+                    document.getElementById('ip-status-text').textContent = translations['ip-status-error'] + error.message;
+                }
+            });
+        
+            // 网络诊断工具
+            document.getElementById('network-test-btn').addEventListener('click', async () => {
+                const networkResults = document.getElementById('network-test-results');
+                const networkStatus = document.getElementById('network-status');
+                const downloadSpeed = document.getElementById('download-speed');
+                const uploadSpeed = document.getElementById('upload-speed');
+                
+                try {
+                    // 显示加载状态
+                    document.getElementById('network-status-text').textContent = translations['network-status-testing'];
+                    networkResults.classList.remove('hidden');
+                    
+                    // 测试下载速度
+                    networkStatus.textContent = '测试下载速度...';
+                    const downloadResult = await testDownloadSpeed();
+                    downloadSpeed.textContent = downloadResult;
+                    
+                    // 测试上传速度
+                    networkStatus.textContent = '测试上传速度...';
+                    const uploadResult = await testUploadSpeed();
+                    uploadSpeed.textContent = uploadResult;
+                    
+                    // 更新状态
+                    networkStatus.textContent = translations['network-status-success'];
+                    document.getElementById('network-status-text').textContent = translations['network-status-success'];
+                    
+                } catch (error) {
+                    console.error('网络测试错误:', error);
+                    networkStatus.textContent = translations['network-status-error'] + error.message;
+                    document.getElementById('network-status-text').textContent = translations['network-status-error'] + error.message;
+                }
+            });
+        
+            // 测试下载速度
+            async function testDownloadSpeed() {
+                const testUrl = 'https://speedtest.ftp.otenet.gr/files/test100k.db';
+                const startTime = performance.now();
+                
+                // 使用随机参数避免缓存
+                const response = await fetch(testUrl + '?cache=' + Math.random());
+                const blob = await response.blob();
+                const endTime = performance.now();
+                
+                const duration = (endTime - startTime) / 1000; // 转换为秒
+                const size = blob.size / 1024; // 转换为KB
+                const speed = (size / duration).toFixed(2); // KB/s
+                
+                return `${speed} KB/s`;
+            }
+        
+            // 测试上传速度
+            async function testUploadSpeed() {
+                const testUrl = 'https://httpbin.org/post';
+                const data = new Blob([new ArrayBuffer(100000)]); // 100KB数据
+                const startTime = performance.now();
+                
+                const response = await fetch(testUrl, {
+                    method: 'POST',
+                    body: data
+                });
+                const endTime = performance.now();
+                
+                const duration = (endTime - startTime) / 1000; // 转换为秒
+                const size = data.size / 1024; // 转换为KB
+                const speed = (size / duration).toFixed(2); // KB/s
+                
+                return `${speed} KB/s`;
+            }
+        
+            // 格式转换功能
+            const converterFileInput = document.getElementById('converter-file');
+            const converterFileText = document.getElementById('converter-file-text');
+            const convertBtn = document.getElementById('convert-btn');
+            const currentFormat = document.getElementById('current-format');
+            const filePreview = document.getElementById('file-preview');
+            const converterStatusBox = document.getElementById('converter-status-box');
+            const converterStatusText = document.getElementById('converter-status-text');
+            const converterResultSection = document.getElementById('converter-result-section');
+            const converterResultIcon = document.getElementById('converter-result-icon');
+            const converterResultText = document.getElementById('converter-result-text');
+            const downloadConvertedBtn = document.getElementById('download-converted-btn');
+            const resetConverterBtn = document.getElementById('reset-converter-btn');
+        
+            let selectedFile = null;
+            let convertedFile = null;
+        
+            converterFileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    selectedFile = file;
+                    converterFileText.textContent = file.name;
+                    updateFilePreview(file);
+                    updateCurrentFormat(file);
+                    convertBtn.disabled = false;
+                }
+            });
+        
+            // 更新文件预览
+            function updateFilePreview(file) {
+                filePreview.innerHTML = '';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => URL.revokeObjectURL(img.src);
+                    filePreview.appendChild(img);
+                } else if (file.type.startsWith('audio/')) {
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.src = URL.createObjectURL(file);
+                    audio.onloadeddata = () => URL.revokeObjectURL(audio.src);
+                    filePreview.appendChild(audio);
+                } else {
+                    filePreview.innerHTML = `<span>${file.name}</span>`;
+                }
+            }
+        
+            // 更新当前格式显示
+            function updateCurrentFormat(file) {
+                const extension = file.name.split('.').pop().toLowerCase();
+                currentFormat.textContent = translations['current-format'] + extension.toUpperCase();
+            }
+        
+            // 转换按钮事件
+            convertBtn.addEventListener('click', async () => {
+                const targetFormat = document.getElementById('target-format').value;
+                
+                if (!selectedFile) {
+                    showConverterStatus(translations['error-no-file'], true);
+                    return;
+                }
+                
+                if (!targetFormat) {
+                    showConverterStatus('请选择目标格式', true);
+                    return;
+                }
+                
+                // 显示转换状态
+                converterStatusBox.classList.remove('hidden');
+                showConverterStatus(translations['converter-status-processing']);
+                
+                try {
+                    // 这里应该是实际的转换逻辑
+                    // 模拟转换过程
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // 模拟转换成功
+                    const convertedFileName = selectedFile.name.replace(/\.[^/.]+$/, '') + '.' + targetFormat;
+                    
+                    // 创建模拟的转换后文件
+                    convertedFile = new File([selectedFile], convertedFileName, {
+                        type: getMimeType(targetFormat),
+                        lastModified: new Date().getTime()
+                    });
+                    
+                    showConverterStatus(translations['converter-status-success']);
+                    
+                    // 显示结果
+                    converterResultIcon.textContent = '✓';
+                    converterResultIcon.className = 'result-icon';
+                    converterResultText.textContent = translations['converter-result-success'];
+                    converterResultSection.classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('转换错误:', error);
+                    showConverterStatus(translations['converter-status-error'] + error.message, true);
+                }
+            });
+        
+            // 下载转换后的文件
+            downloadConvertedBtn.addEventListener('click', () => {
+                if (!convertedFile) {
+                    showConverterStatus('没有可下载的文件', true);
+                    return;
+                }
+                
+                const url = URL.createObjectURL(convertedFile);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = convertedFile.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showConverterStatus(translations['download-converted-btn'] + ' ' + translations['converter-status-success']);
+            });
+        
+            // 重置转换器
+            resetConverterBtn.addEventListener('click', () => {
+                converterFileInput.value = '';
+                converterFileText.textContent = translations['converter-file-text'];
+                document.getElementById('target-format').value = '';
+                currentFormat.textContent = translations['current-format'] + '未选择文件';
+                filePreview.innerHTML = '<span>文件预览区域</span>';
+                convertBtn.disabled = true;
+                converterStatusBox.classList.add('hidden');
+                converterResultSection.classList.add('hidden');
+                selectedFile = null;
+                convertedFile = null;
+            });
+        
+            // 根据格式获取MIME类型
+            function getMimeType(format) {
+                switch(format) {
+                    case 'mp3': return 'audio/mpeg';
+                    case 'wav': return 'audio/wav';
+                    case 'jpg': return 'image/jpeg';
+                    case 'png': return 'image/png';
+                    case 'ico': return 'image/x-icon';
+                    default: return 'application/octet-stream';
+                }
+            }
+        
+            // 显示转换状态
+            function showConverterStatus(message, isError = false) {
+                converterStatusBox.classList.remove('hidden');
+                converterStatusText.textContent = message;
+                
+                if (isError) {
+                    converterStatusBox.className = 'status-box converter error';
+                } else {
+                    converterStatusBox.className = 'status-box converter';
+                }
+            }
+        
+            // 格式分类切换
+            document.querySelectorAll('.format-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.format-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // 这里可以添加根据分类筛选格式的逻辑
+                    const category = item.textContent;
+                    const options = document.getElementById('target-format').options;
+                    
+                    // 显示所有选项
+                    for (let i = 0; i < options.length; i++) {
+                        options[i].hidden = false;
+                    }
+                    
+                    if (category === '音频') {
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            if (option.value !== 'mp3' && option.value !== 'wav') {
+                                option.hidden = true;
+                            }
+                        }
+                    } else if (category === '图片') {
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            if (option.value !== 'jpg' && option.value !== 'png' && option.value !== 'ico') {
+                                option.hidden = true;
+                            }
+                        }
+                    }
+                });
+            });
+        
+            // 辅助函数
+            function readFileAsArrayBuffer(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+        
+            function showStatus(message, isError = false) {
+                const statusBox = document.getElementById('status-box');
+                const statusText = document.getElementById('status-text');
+                
+                statusBox.classList.remove('hidden');
+                statusText.textContent = message;
+                
+                if (isError) {
+                    statusBox.className = 'status-box error';
+                } else {
+                    statusBox.className = 'status-box';
+                }
+            }
+        
+            function showEncryptStatus(message, isError = false) {
+                const statusBox = document.getElementById('encrypt-status-box');
+                const statusText = document.getElementById('encrypt-status-text');
+                
+                statusBox.classList.remove('hidden');
+                statusText.textContent = message;
+                
+                if (isError) {
+                    statusBox.className = 'status-box error';
+                } else {
+                    statusBox.className = 'status-box';
+                }
+            }
+        
+            function updateProgress(percent) {
+                const progressBar = document.getElementById('progress-bar');
+                const progressText = document.getElementById('progress-text');
+                
+                progressBar.style.width = percent + '%';
+                progressText.textContent = percent + '%';
+            }
+        
+            function updateEncryptProgress(percent) {
+                const progressBar = document.getElementById('encrypt-progress-bar');
+                const progressText = document.getElementById('encrypt-progress-text');
+                
+                progressBar.style.width = percent + '%';
+                progressText.textContent = percent + '%';
+            }
+        
+            function arrayBufferToBase64(buffer) {
+                let binary = '';
+                const bytes = new Uint8Array(buffer);
+                const len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return btoa(binary);
+            }
+        
+            function base64ToArrayBuffer(base64) {
+                const binaryString = atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes;
+            }
+        
+            // 初始化应用
+            document.addEventListener('DOMContentLoaded', () => {
+                updateTexts();
+                updateDeviceInfo();
+                
+                // 添加拖放功能
+                const converterFileLabel = document.querySelector('.file-input-label');
+                
+                converterFileLabel.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    converterFileLabel.style.background = '#e8f0fe';
+                    converterFileLabel.style.borderColor = '#4285f4';
+                });
+                
+                converterFileLabel.addEventListener('dragleave', () => {
+                    converterFileLabel.style.background = '';
+                    converterFileLabel.style.borderColor = '';
+                });
+                
+                converterFileLabel.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    converterFileLabel.style.background = '';
+                    converterFileLabel.style.borderColor = '';
+                    
+                    if (e.dataTransfer.files.length) {
+                        converterFileInput.files = e.dataTransfer.files;
+                        const event = new Event('change');
+                        converterFileInput.dispatchEvent(event);
+                    }
+                });
+            });
+        </script>
         
         <footer>
             <p id="footer-text">安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版</p>
         </footer>
     </div>
-
-    <script>
-        // 中文文本
-        const translations = {
-            'app-title': '安全文件加密解密系统(增强版)',
-            'device-id-label': '设备ID',
-            'platform-label': '平台',
-            'file-label': '选择加密文件 (.dzj2)',
-            'file-text': '点击或拖放文件到此处',
-            'decrypt-btn': '开始解密',
-            'status-waiting': '等待操作...',
-            'status-selected': '文件已选择: ',
-            'status-reading': '正在读取文件...',
-            'status-decrypting': '正在解密数据...',
-            'status-saving': '正在保存文件...',
-            'status-success': '解密成功!',
-            'status-error': '解密失败: ',
-            'result-success': '文本已成功解密!',
-            'copy-btn': '复制文本',
-            'reset-btn': '处理新文件',
-            'footer-text': '安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版',
-            'error-invalid-file': '无效的DZJ2文件格式',
-            'error-device-id': '无法获取设备ID',
-            'error-unauthorized': '当前设备未授权访问此文件',
-            'error-decrypt': '解密过程中发生错误',
-            'error-json': 'JSON解析失败',
-            'error-garbled': 'JSON解析失败 - 输出乱码',
-            'error-no-file': '请先选择加密文件',
-            'error-unknown': '发生未知错误',
-            'copy-success': '文本已复制到剪贴板',
-            'copy-error': '复制失败，请手动复制',
-            'uuid-copied': '设备ID已复制',
-            'authorized-devices': '授权设备列表:',
-            'authorized-device': '授权设备:',
-            'authorized-none': '此文件未设置设备限制',
-            'authorized-error': '无法验证授权状态',
-            'text-input-label': '输入要加密的文本',
-            'file-name-label': '输出文件名',
-            'authorized-devices-label': '授权设备ID列表 (用逗号分隔)',
-            'encrypt-btn': '开始加密',
-            'encrypt-status-waiting': '等待操作...',
-            'encrypt-status-processing': '正在加密数据...',
-            'encrypt-status-success': '加密成功!',
-            'encrypt-status-error': '加密失败: ',
-            'encrypt-result-success': '文件已成功加密!',
-            'download-btn': '下载加密文件',
-            'reset-encrypt-btn': '创建新文件',
-            'ip-status-waiting': '点击下方按钮获取IP信息',
-            'ip-status-fetching': '正在获取IP信息...',
-            'ip-status-success': 'IP信息获取成功!',
-            'ip-status-error': '获取IP信息失败: ',
-            'network-status-waiting': '点击下方按钮开始测试',
-            'network-status-testing': '正在测试网络连接...',
-            'network-status-success': '网络测试完成!',
-            'network-status-error': '网络测试失败: ',
-            'converter-file-text': '点击或拖放文件到此处',
-            'converter-status-waiting': '等待操作...',
-            'converter-status-processing': '正在转换文件...',
-            'converter-status-success': '转换成功!',
-            'converter-status-error': '转换失败: ',
-            'converter-result-success': '文件已成功转换!',
-            'download-converted-btn': '下载转换文件',
-            'reset-converter-btn': '转换新文件',
-            'error-no-file': '请先选择文件',
-            'error-unsupported-format': '不支持的文件格式',
-            'error-conversion': '转换过程中发生错误',
-            'current-format': '当前格式: '
-        };
-
-        // 存储设备ID
-        let deviceId = '';
-
-        // 更新界面文本
-        function updateTexts() {
-            document.getElementById('app-title').textContent = translations['app-title'];
-            document.getElementById('footer-text').textContent = translations['footer-text'];
-            document.getElementById('status-text').textContent = translations['status-waiting'];
-            document.getElementById('encrypt-status-text').textContent = translations['encrypt-status-waiting'];
-            document.getElementById('ip-status-text').textContent = translations['ip-status-waiting'];
-            document.getElementById('network-status-text').textContent = translations['network-status-waiting'];
-            document.getElementById('converter-status-text').textContent = translations['converter-status-waiting'];
-            document.getElementById('converter-file-text').textContent = translations['converter-file-text'];
-            document.getElementById('current-format').textContent = translations['current-format'] + '未选择文件';
-        }
-
-        // 标签切换功能
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // 更新标签状态
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // 显示对应内容
-                const tabId = tab.getAttribute('data-tab');
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.add('hidden');
-                });
-                document.getElementById(`${tabId}-tab`).classList.remove('hidden');
-                
-                // 重置结果区域
-                document.getElementById('result-section').classList.add('hidden');
-                document.getElementById('encrypt-result-section').classList.add('hidden');
-                document.getElementById('converter-result-section').classList.add('hidden');
-            });
-        });
-
-        // 获取设备ID
-        async function getDeviceId() {
-            try {
-                // 尝试从本地存储获取设备ID
-                const storedDeviceId = localStorage.getItem('secure_device_id');
-                if (storedDeviceId) {
-                    return storedDeviceId;
-                }
-                
-                // 收集设备特征
-                const deviceFeatures = await collectDeviceFeatures();
-                
-                // 生成特征哈希
-                const featureString = JSON.stringify(deviceFeatures);
-                const encoder = new TextEncoder();
-                const data = encoder.encode(featureString);
-                
-                // 使用SHA-256生成哈希
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                // 存储设备ID
-                localStorage.setItem('secure_device_id', hashHex);
-                
-                return hashHex;
-            } catch (e) {
-                console.error('获取设备ID错误:', e);
-                return generateFallbackId();
-            }
-        }
-
-        // 收集设备特征
-        async function collectDeviceFeatures() {
-            const features = {};
-            
-            // 基本设备信息
-            features.userAgent = navigator.userAgent;
-            features.platform = navigator.platform;
-            features.languages = navigator.languages.join(',');
-            features.screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
-            features.hardwareConcurrency = navigator.hardwareConcurrency;
-            features.deviceMemory = navigator.deviceMemory;
-            features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            features.maxTouchPoints = navigator.maxTouchPoints;
-            features.devicePixelRatio = window.devicePixelRatio;
-            
-            // WebGL特征
-            try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                    if (debugInfo) {
-                        features.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-                        features.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                    }
-                }
-            } catch (e) {
-                console.warn('无法获取WebGL信息');
-            }
-            
-            // 媒体特征
-            if (navigator.mediaDevices && navigator.media.enumerateDevices) {
-                try {
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    features.mediaDevices = devices.map(d => `${d.kind}:${d.groupId}`).join(';');
-                } catch (e) {
-                    console.warn('无法获取媒体设备信息');
-                }
-            }
-            
-            // 网络特征
-            if (navigator.connection) {
-                const conn = navigator.connection;
-                features.connectionType = conn.type;
-                features.effectiveType = conn.effectiveType;
-                features.downlink = conn.downlink;
-                features.rtt = conn.rtt;
-            }
-            
-            // 字体特征
-            try {
-                const fontList = [];
-                const testString = "mmMwWLliI0O&1";
-                const testSize = '72px';
-                const fonts = [
-                    'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold',
-                    'Courier New', 'Georgia', 'Times New Roman', 'Trebuchet MS',
-                    'Verdana', 'Comic Sans MS', 'Impact', 'Lucida Console',
-                    'Palatino Linotype', 'Tahoma', 'Garamond', 'Bookman'
-                ];
-                
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                
-                for (const font of fonts) {
-                    context.font = `${testSize} "${font}"`;
-                    const width = context.measureText(testString).width;
-                    fontList.push(`${font}:${width}`);
-                }
-                
-                features.fonts = fontList.join(';');
-            } catch (e) {
-                console.warn('无法获取字体信息');
-            }
-            
-            return features;
-        }
-
-        // 备用设备ID生成方法
-        function generateFallbackId() {
-            // 使用更简单的方法生成ID
-            const fallbackInfo = [
-                navigator.userAgent,
-                navigator.platform,
-                screen.width,
-                screen.height,
-                navigator.languages[0]
-            ].join('|');
-            
-            let hash = 0;
-            for (let i = 0; i < fallbackInfo.length; i++) {
-                const char = fallbackInfo.charCodeAt(i);
-                hash = (hash << 5) - hash + char;
-                hash = hash & hash; // 转换为32位整数
-            }
-            return 'sec-' + Math.abs(hash).toString(36);
-        }
-
-        // 更新设备信息
-        async function updateDeviceInfo() {
-            try {
-                deviceId = await getDeviceId();
-                const platform = navigator.platform;
-                
-                // 更新设备ID显示
-                document.getElementById('device-id').textContent = deviceId;
-                document.getElementById('device-id-encrypt').textContent = deviceId;
-                
-                // 更新平台信息
-                document.getElementById('platform').value = platform;
-            } catch (e) {
-                console.error('更新设备信息错误:', e);
-                document.getElementById('device-id').textContent = translations['error-device-id'];
-                document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
-                document.getElementById('platform').value = '未知';
-            }
-        }
-
-        // 文件选择处理
-        const fileInput = document.getElementById('encrypted-file');
-        const fileNameDisplay = document.getElementById('file-name');
-        const decryptBtn = document.getElementById('decrypt-btn');
-        
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                fileNameDisplay.textContent = translations['status-selected'] + file.name;
-                fileNameDisplay.classList.remove('hidden');
-                decryptBtn.disabled = false;
-                
-                // 重置授权设备显示
-                document.getElementById('authorized-devices').classList.add('hidden');
-            }
-        });
-
-        // 拖放文件支持
-        const fileInputLabel = document.querySelector('.file-input-label');
-        
-        fileInputLabel.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileInputLabel.style.background = '#e8f0fe';
-            fileInputLabel.style.borderColor = '#4285f4';
-        });
-        
-        fileInputLabel.addEventListener('dragleave', () => {
-            fileInputLabel.style.background = '';
-            fileInputLabel.style.borderColor = '';
-        });
-        
-        fileInputLabel.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileInputLabel.style.background = '';
-            fileInputLabel.style.borderColor = '';
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                const event = new Event('change');
-                fileInput.dispatchEvent(event);
-            }
-        });
-
-        // 解密功能
-        decryptBtn.addEventListener('click', async () => {
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                showStatus(translations['error-no-file'], true);
-                return;
-            }
-            
-            // 显示进度条
-            const progressContainer = document.getElementById('progress-container');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            progressContainer.classList.remove('hidden');
-            
-            try {
-                // 1. 读取文件
-                showStatus(translations['status-reading']);
-                updateProgress(10);
-                
-                const fileData = await readFileAsArrayBuffer(file);
-                updateProgress(30);
-                
-                // 2. 解密文件
-                showStatus(translations['status-decrypting']);
-                updateProgress(50);
-                
-                // 使用全局存储的deviceId
-                if (!deviceId) {
-                    throw new Error(translations['error-device-id']);
-                }
-                
-                const decryptedData = await secureDecrypt(fileData, deviceId);
-                updateProgress(80);
-                
-                // 3. 显示文本内容
-                showStatus(translations['status-success']);
-                updateProgress(90);
-                
-                const textContent = new TextDecoder('utf-8').decode(decryptedData);
-                updateProgress(100);
-                
-                // 显示结果
-                const resultSection = document.getElementById('result-section');
-                const resultIcon = document.getElementById('result-icon');
-                const resultText = document.getElementById('result-text');
-                const textDisplay = document.getElementById('text-display');
-                
-                resultIcon.textContent = '✓';
-                resultIcon.className = 'result-icon';
-                resultText.textContent = translations['result-success'];
-                textDisplay.textContent = textContent;
-                resultSection.classList.remove('hidden');
-                
-            } catch (error) {
-                console.error('解密错误:', error);
-                showStatus(translations['status-error'] + error.message, true);
-                updateProgress(0);
-                
-                // 显示错误结果
-                const resultSection = document.getElementById('result-section');
-                const resultIcon = document.getElementById('result-icon');
-                const resultText = document.getElementById('result-text');
-                
-                resultIcon.textContent = '✗';
-                resultIcon.className = 'result-icon error';
-                resultText.textContent = translations['status-error'] + error.message;
-                resultSection.classList.remove('hidden');
-            }
-        });
-
-        // 安全解密函数 - 修复文件格式问题
-        async function secureDecrypt(encryptedData, deviceId) {
-            const authorizedDevices = document.getElementById('authorized-devices');
-            
-            try {
-                // 1. 检查文件头
-                const header = new Uint8Array(encryptedData, 0, 3);
-                const actualHeader = String.fromCharCode(header[0], header[1], header[2]);
-                if (actualHeader !== 'DZ2') {
-                    throw new Error(translations['error-invalid-file'] + ` (实际文件头: ${actualHeader})`);
-                }
-                
-                // 2. 解析数据长度 - 修复偏移量
-                const dataView = new DataView(encryptedData);
-                const layer2Length = dataView.getUint32(3, false); // 从第4字节开始
-                const layer1Length = dataView.getUint32(7, false); // 从第8字节开始
-                
-                // 3. 检查文件总长度
-                const totalHeaderLength = 11; // 3字节文件头 + 4字节第二层长度 + 4字节第一层长度
-                if (encryptedData.byteLength < totalHeaderLength + layer2Length + layer1Length) {
-                    throw new Error(translations['error-invalid-file'] + ` (文件大小不足，需要${totalHeaderLength + layer2Length + layer1Length}字节，实际${encryptedData.byteLength}字节)`);
-                }
-                
-                // 4. 提取两层数据 - 修复偏移量
-                const layer2Encrypted = new Uint8Array(encryptedData, 11, layer2Length);
-                const layer1Encrypted = new Uint8Array(encryptedData, 11 + layer2Length, layer1Length);
-                
-                // 5. 解密第二层 (UUID层)
-                const deviceHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(deviceId));
-                const layer2Key = new Uint8Array(deviceHash).slice(0, 16);
-                const layer2Iv = new Uint8Array(deviceHash).slice(16, 32);
-                
-                const layer2Decrypted = xorDecrypt(layer2Encrypted, [...layer2Key, ...layer2Iv]);
-                
-                // 6. 尝试解析JSON
-                let layer2Data;
-                let rawLayer2Data = new TextDecoder().decode(layer2Decrypted);
-                
-                // 检测乱码
-                if (isGarbledText(rawLayer2Data)) {
-                    throw new Error(translations['error-garbled']);
-                }
-                
-                try {
-                    // 尝试解析JSON
-                    layer2Data = JSON.parse(rawLayer2Data);
-                } catch (e) {
-                    // 如果解析失败，尝试修复JSON格式
-                    try {
-                        // 尝试修复常见的JSON格式问题
-                        const fixedText = rawLayer2Data
-                            .replace(/'/g, '"') // 替换单引号为双引号
-                            .replace(/,\s*}/g, '}') // 修复多余的逗号
-                            .replace(/,\s*]/g, ']') // 修复多余的逗号
-                            .replace(/\\"/g, '"') // 处理转义双引号
-                            .replace(/\\n/g, '') // 处理换行符
-                            .replace(/\\r/g, '') // 处理回车符
-                            .replace(/\\t/g, '') // 处理制表符
-                            .replace(/\\u([\d\w]{4})/gi, (match, grp) => {
-                                return String.fromCharCode(parseInt(grp, 16));
-                            }); // 处理Unicode转义
-                        
-                        layer2Data = JSON.parse(fixedText);
-                    } catch (e2) {
-                        console.error('JSON解析失败，原始数据:', rawLayer2Data.substring(0, 100));
-                        throw new Error(translations['error-json'] + ' - 数据格式无效');
-                    }
-                }
-                
-                // 7. 显示授权设备
-                authorizedDevices.textContent = translations['authorized-devices'];
-                layer2Data.authorized_uuids.forEach(uuid => {
-                    authorizedDevices.textContent += `\n- ${uuid.substring(0, 12)}...`;
-                });
-                authorizedDevices.classList.remove('hidden');
-                
-                // 8. 验证设备授权
-                const currentUpper = deviceId.toUpperCase();
-                let authorized = false;
-                for (const uuid of layer2Data.authorized_uuids) {
-                    if (uuid.toUpperCase() === currentUpper) {
-                        authorized = true;
-                        break;
-                    }
-                }
-                
-                if (!authorized) {
-                    throw new Error(translations['error-unauthorized']);
-                }
-                
-                // 9. 解密第一层 (数据层)
-                const layer1Key = base64ToArrayBuffer(layer2Data.key);
-                const layer1Iv = base64ToArrayBuffer(layer2Data.iv);
-                const compressedData = xorDecrypt(layer1Encrypted, [...layer1Key, ...layer1Iv]);
-                
-                // 10. 解压缩数据
-                try {
-                    const decompressed = pako.inflate(compressedData);
-                    return decompressed;
-                } catch (e) {
-                    throw new Error(translations['error-decrypt']);
-                }
-            } catch (error) {
-                console.error('完整解密错误:', error);
-                throw error;
-            }
-        }
-
-        // 检测乱码文本
-        function isGarbledText(text) {
-            // 检测文本中非打印字符的比例
-            let nonPrintableCount = 0;
-            for (let i = 0; i < text.length; i++) {
-                const charCode = text.charCodeAt(i);
-                // 非打印字符: 控制字符 (0-31) 和删除字符 (127)
-                if (charCode < 32 || charCode === 127) {
-                    nonPrintableCount++;
-                }
-            }
-            
-            // 如果非打印字符超过文本长度的30%，则认为是乱码
-            return (nonPrintableCount / text.length) > 0.3;
-        }
-
-        // 加密功能
-        document.getElementById('encrypt-btn').addEventListener('click', async () => {
-            const textInput = document.getElementById('text-input').value;
-            const outputFilename = document.getElementById('output-filename').value || 'encrypted_file.dzj2';
-            const authorizedUuidsInput = document.getElementById('authorized-uuids').value;
-            
-            if (!textInput) {
-                showEncryptStatus(translations['error-no-text'], true);
-                return;
-            }
-            
-            // 显示进度条
-            const progressContainer = document.getElementById('encrypt-progress-container');
-            const progressBar = document.getElementById('encrypt-progress-bar');
-            const progressText = document.getElementById('encrypt-progress-text');
-            progressContainer.classList.remove('hidden');
-            
-            try {
-                // 1. 准备数据
-                showEncryptStatus(translations['encrypt-status-processing']);
-                updateEncryptProgress(10);
-                
-                // 使用全局存储的deviceId
-                if (!deviceId) {
-                    throw new Error(translations['error-device-id']);
-                }
-                
-                // 解析授权UUID列表
-                let authorizedUuids = [];
-                if (authorizedUuidsInput) {
-                    authorizedUuids = authorizedUuidsInput.split(',')
-                        .map(uuid => uuid.trim())
-                        .filter(uuid => uuid.length > 0);
-                }
-                
-                // 默认包含当前设备
-                if (!authorizedUuids.includes(deviceId)) {
-                    authorizedUuids.push(deviceId);
-                }
-                
-                // 2. 加密数据
-                updateEncryptProgress(30);
-                const encryptedData = await secureEncrypt(textInput, deviceId, authorizedUuids);
-                updateEncryptProgress(70);
-                
-                // 3. 创建Blob并下载
-                const blob = new Blob([encryptedData], {type: 'application/octet-stream'});
-                const url = URL.createObjectURL(blob);
-                
-                // 保存下载链接
-                window.encryptedFileUrl = url;
-                window.encryptedFileName = outputFilename;
-                
-                updateEncryptProgress(100);
-                showEncryptStatus(translations['encrypt-status-success']);
-                
-                // 显示结果
-                const resultSection = document.getElementById('encrypt-result-section');
-                const resultIcon = document.getElementById('encrypt-result-icon');
-                const resultText = document.getElementById('encrypt-result-text');
-                
-                resultIcon.textContent = '✓';
-                resultIcon.className = 'result-icon';
-                resultText.textContent = translations['encrypt-result-success'];
-                resultSection.classList.remove('hidden');
-                
-            } catch (error) {
-                console.error('加密错误:', error);
-                showEncryptStatus(translations['encrypt-status-error'] + error.message, true);
-                updateEncryptProgress(0);
-            }
-        });
-
-        // 安全加密函数 - 修复文件格式问题
-        async function secureEncrypt(text, deviceId, authorizedUuids) {
-            try {
-                const encoder = new TextEncoder();
-                
-                // 1. 准备原始数据
-                const textData = encoder.encode(text);
-                
-                // 2. 压缩数据
-                const compressedData = pako.deflate(textData);
-                
-                // 3. 生成第一层加密密钥和IV
-                const layer1Key = crypto.getRandomValues(new Uint8Array(16));
-                const layer1Iv = crypto.getRandomValues(new Uint8Array(16));
-                
-                // 4. 第一层加密
-                const layer1Encrypted = xorDecrypt(compressedData, [...layer1Key, ...layer1Iv]);
-                
-                // 5. 构建第二层数据包
-                const layer2Data = {
-                    key: arrayBufferToBase64(layer1Key),
-                    iv: arrayBufferToBase64(layer1Iv),
-                    authorized_uuids: authorizedU,
-                    signature: await generateSignature(authorizedUuids.join(','))
-                };
-                
-                // 6. 序列化JSON数据
-                let layer2Json;
-                try {
-                    // 使用JSON.stringify生成JSON
-                    layer2Json = JSON.stringify(layer2Data, null, 2);
-                    
-                    // 验证JSON有效性
-                    JSON.parse(layer2Json);
-                } catch (e) {
-                    // 如果JSON无效，尝试修复
-                    try {
-                        // 使用更安全的方法生成JSON
-                        layer2Json = JSON.stringify(layer2Data, (key, value) => {
-                            if (typeof value === 'string') {
-                                // 移除控制字符和无效字符
-                                return value.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-                            }
-                            return value;
-                        });
-                        
-                        // 再次验证
-                        JSON.parse(layer2);
-                    } catch (e2) {
-                        console.error('生成的JSON无效:', layer2Data);
-                        throw new Error('生成的授权信息JSON无效');
-                    }
-                }
-                
-                // 7. 编码JSON数据为UTF-8
-                const layer2Encoded = encoder.encode(layer2Json);
-                
-                // 8. 生成第二层加密密钥
-                const deviceHash = await crypto.subtle.digest('SHA-256', encoder.encode(deviceId));
-                const layer2Key = new Uint8Array(deviceHash).slice(0, 16);
-                const layer2Iv = new Uint8Array(deviceHash).slice(16, 32);
-                
-                // 9. 第二层加密
-                const layer2Encrypted = xorDecrypt(layer2Encoded, [...layer2Key, ...layer2Iv]);
-                
-                // 10. 构建文件结构 - 修复文件格式
-                const header = encoder.encode('DZ2');
-                const totalLength = 11 + layer2Encrypted.length + layer1Encrypted.length;
-                const encryptedData = new Uint8Array(totalLength);
-                
-                let offset = 0;
-                
-                // 添加文件头 (3字节)
-                encryptedData.set(header, offset);
-                offset += header.length;
-                
-                // 使用DataView写入长度信息 (大端序)
-                const dataView = new DataView(encryptedData.buffer);
-                dataView.setUint32(offset, layer2Encrypted.length, false);
-                offset += 4;
-                
-                dataView.setUint32(offset, layer1Encrypted.length, false);
-                offset += 4;
-                
-                // 添加第二层加密数据
-                encryptedData.set(layer2Encrypted, offset);
-                offset += layer2Encrypted.length;
-                
-                // 添加第一层加密数据
-                encryptedData.set(layer1Encrypted, offset);
-                
-                return encryptedData;
-            } catch (error) {
-                console.error('加密错误:', error);
-                throw error;
-            }
-        }
-
-        // 异或加密函数
-        function xorDecrypt(data, key) {
-            const result = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                result[i] = data[i] ^ key[i % key.length];
-            }
-            return result;
-        }
-
-        // 生成签名
-        async function generateSignature(data) {
-            const encoder = new TextEncoder();
-            const dataBuffer = encoder.encode(data);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
-            return arrayBufferToBase64(hashBuffer);
-        }
-
-        // 下载加密文件
-        document.getElementById('download-btn').addEventListener('click', () => {
-            if (!window.encryptedFileUrl) {
-                showEncryptStatus(translations['error-no-file'], true);
-                return;
-            }
-            
-            const a = document.createElement('a');
-            a.href = window.encryptedFileUrl;
-            
-            // 确保下载文件扩展名为.dzj2
-            let filename = window.encryptedFileName || 'encrypted_file.dzj2';
-            if (!filename.toLowerCase().endsWith('.dzj2')) {
-                filename += '.dzj2';
-            }
-            
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showEncryptStatus(translations['download-btn'] + ' ' + translations['encrypt-status-success']);
-        });
-
-        // 复制设备ID功能
-        document.getElementById('copy-uuid-btn').addEventListener('click', () => {
-            const deviceId = document.getElementById('device-id').textContent;
-            
-            try {
-                navigator.clipboard.writeText(deviceId).then(() => {
-                    showStatus(translations['uuid-copied']);
-                }).catch(() => {
-                    showStatus(translations['copy-error'], true);
-                });
-            } catch (e) {
-                showStatus(translations['copy-error'], true);
-            }
-        });
-
-        // 复制设备ID功能 (加密页)
-        document.getElementById('copy-uuid-btn-encrypt').addEventListener('click', () => {
-            const deviceId = document.getElementById('device-id-encrypt').textContent;
-            
-            try {
-                navigator.clipboard.writeText(deviceId).then(() => {
-                    showEncryptStatus(translations['uuid-copied']);
-                }).catch(() => {
-                    showEncryptStatus(translations['copy-error'], true);
-                });
-            } catch (e) {
-                showEncryptStatus(translations['copy-error'], true);
-            }
-        });
-
-// 复制文本功能
-document.getElementById('copy-btn').addEventListener('click', () => {
-            const textDisplay = document.getElementById('text-display');
-            
-            try {
-                const text = textDisplay.textContent;
-                navigator.clipboard.writeText(text).then(() => {
-                    showStatus(translations['copy-success']);
-                }).catch(() => {
-                    showStatus(translations['copy-error'], true);
-                });
-            } catch (e) {
-                showStatus(translations['copy-error'], true);
-            }
-        });
-
-        // 重置按钮
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            // 重置表单
-            fileInput.value = '';
-            fileNameDisplay.classList.add('hidden');
-            decryptBtn.disabled = true;
-            
-            // 隐藏结果区域
-            document.getElementById('result-section').classList.add('hidden');
-            
-            // 隐藏进度条
-            document.getElementById('progress-container').classList.add('hidden');
-            
-            // 隐藏授权设备信息
-            document.getElementById('authorized-devices').classList.add('hidden');
-            
-            // 重置状态
-            showStatus(translations['status-waiting']);
-        });
-
-        // 重置加密按钮
-        document.getElementById('reset-encrypt-btn').addEventListener('click', () => {
-            // 重置表单
-            document.getElementById('text-input').value = '';
-            document.getElementById('output-filename').value = '';
-            document.getElementById('authorized-uuids').value = '';
-            
-            // 隐藏结果区域
-            document.getElementById('encrypt-result-section').classList.add('hidden');
-            
-            // 隐藏进度条
-            document.getElementById('encrypt-progress-container').classList.add('hidden');
-            
-            // 重置状态
-            showEncryptStatus(translations['encrypt-status-waiting']);
-        });
-
-        // IP地址工具
-        document.getElementById('get-ip-btn').addEventListener('click', async () => {
-            const ipContainer = document.getElementById('ip-info-container');
-            const publicIp = document.getElementById('public-ip');
-            const ipLocation = document.getElementById('ip-location');
-            const ipIsp = document.getElementById('ip-isp');
-            const browserInfo = document.getElementById('browser-info');
-            
-            try {
-                // 显示加载状态
-                document.getElementById('ip-status-text').textContent = translations['ip-status-fetching'];
-                
-                // 获取IP信息
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                
-                // 更新IP信息
-                publicIp.textContent = data.ip;
-                ipLocation.textContent = `${data.city}, ${data.region}, ${data.country_name}`;
-                ipIsp.textContent = data.org;
-                browserInfo.textContent = navigator.userAgent;
-                
-                // 显示结果
-                ipContainer.classList.remove('hidden');
-                document.getElementById('ip-status-text').textContent = translations['ip-status-success'];
-                
-            } catch (error) {
-                console.error('获取IP信息错误:', error);
-                document.getElementById('ip-status-text').textContent = translations['ip-status-error'] + error.message;
-            }
-        });
-
-        // 网络诊断工具
-        document.getElementById('network-test-btn').addEventListener('click', async () => {
-            const networkResults = document.getElementById('network-test-results');
-            const networkStatus = document.getElementById('network-status');
-            const downloadSpeed = document.getElementById('download-speed');
-            const uploadSpeed = document.getElementById('upload-speed');
-            
-            try {
-                // 显示加载状态
-                document.getElementById('network-status-text').textContent = translations['network-status-testing'];
-                networkResults.classList.remove('hidden');
-                
-                // 测试下载速度
-                networkStatus.textContent = '测试下载速度...';
-                const downloadResult = await testDownloadSpeed();
-                downloadSpeed.textContent = downloadResult;
-                
-                // 测试上传速度
-                networkStatus.textContent = '测试上传速度...';
-                const uploadResult = await testUploadSpeed();
-                uploadSpeed.textContent = uploadResult;
-                
-                // 更新状态
-                networkStatus.textContent = translations['network-status-success'];
-                document.getElementById.textContent = translations['network-status-success'];
-                
-            } catch (error) {
-                console.error('网络测试错误:', error);
-                networkStatus.textContent = translations['network-status-error'] + error.message;
-                document.getElementById('network-status-text').textContent = translations['network-status-error'] + error.message;
-            }
-        });
-
-        // 测试下载速度
-        async function testDownloadSpeed() {
-            const testUrl = 'https://speedtest.ftp.otenet.gr/files/test100k.db';
-            const startTime = performance.now();
-            
-            // 使用随机参数避免缓存
-            const response = await fetch(testUrl + '?cache=' + Math.random());
-            const blob = await response.blob();
-            const endTime = performance.now();
-            
-            const duration = (endTime - startTime) / 1000; // 转换为秒
-            const size = blob.size / 1024; // 转换为KB
-            const speed = (size / duration).toFixed(2); // KB/s
-            
-            return `${speed} KB/s`;
-        }
-
-        // 测试上传速度
-        async function testUploadSpeed() {
-            const testUrl = 'https://httpbin.org/post';
-            const data = new Blob([new ArrayBuffer(100000)]); // 100KB数据
-            const startTime = performance.now();
-            
-            const response = await fetch(testUrl, {
-                method: 'POST',
-                body: data
-            });
-            const endTime = performance.now();
-            
-            const duration = (endTime - startTime) / 1000; // 转换为秒
-            const size = data.size / 1024; // 转换为KB
-            const speed = (size / duration).toFixed(2); // KB/s
-            
-            return `${speed} KB/s`;
-        }
-
-        // 格式转换功能
-        const converterFileInput = document.getElementById('converter-file');
-        const converterFileText = document.getElementById('converter-file-text');
-        const convertBtn = document.getElementById('convert-btn');
-        const currentFormat = document.getElementById('current-format');
-        const filePreview = document.getElementById('file-preview');
-        const converterStatusBox = document.getElementById('converter-status-box');
-        const converterStatusText = document.getElementById('converter-status-text');
-        const converterResultSection = document.getElementById('converter-result-section');
-        const converterResultIcon = document.getElementById('converter-result-icon');
-        const converterResultText = document.getElementById('converter-result-text');
-        const downloadConvertedBtn = document.getElementById('download-converted-btn');
-        const resetConverterBtn = document.getElementById('reset-converter-btn');
-
-        let selectedFile = null;
-        let convertedFile = null;
-
-        converterFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                selectedFile = file;
-                converterFileText.textContent = file.name;
-                updateFilePreview(file);
-                updateCurrentFormat(file);
-                convertBtn.disabled = false;
-            }
-        });
-
-        // 更新文件预览
-        function updateFilePreview(file) {
-            filePreview.innerHTML = '';
-            
-            if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.onload = () => URL.revokeObjectURL(img.src);
-                filePreview.appendChild(img);
-            } else if (file.type.startsWith('audio/')) {
-                const audio = document.createElement('audio');
-                audio.controls = true;
-                audio.src = URL.createObjectURL(file);
-                audio.onloadeddata = () => URL.revokeObjectURL(audio.src);
-                filePreview.appendChild(audio);
-            } else {
-                filePreview.innerHTML = `<span>${file.name}</span>`;
-            }
-        }
-
-        // 更新当前格式显示
-        function updateCurrentFormat(file) {
-            const extension = file.name.split('.').pop().toLowerCase();
-            currentFormat.textContent = translations['current-format'] + extension.toUpperCase();
-        }
-
-        // 转换按钮事件
-        convertBtn.addEventListener('click', async () => {
-            const targetFormat = document.getElementById('target-format').value;
-            
-            if (!selectedFile) {
-                showConverterStatus(translations['error-no-file'], true);
-                return;
-            }
-            
-            if (!targetFormat) {
-                showConverterStatus('请选择目标格式', true);
-                return;
-            }
-            
-            // 显示转换状态
-            converterStatusBox.classList.remove('hidden');
-            showConverterStatus(translations['converter-status-processing']);
-            
-            try {
-                // 这里应该是实际的转换逻辑
-                // 模拟转换过程
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // 模拟转换成功
-                const convertedFileName = selectedFile.name.replace(/\.[^/.]+$/, '') + '.' + targetFormat;
-                
-                // 创建模拟的转换后文件
-                convertedFile = new File([selectedFile], convertedFileName, {
-                    type: getMimeType(targetFormat),
-                    lastModified: new Date().getTime()
-                });
-                
-                showConverterStatus(translations['converter-status-success']);
-                
-                // 显示结果
-                converterResultIcon.textContent = '✓';
-                converterResultIcon.className = 'result-icon';
-                converterResultText.textContent = translations['converter-result-success'];
-                converterResultSection.classList.remove('hidden');
-                
-            } catch (error) {
-                console.error('转换错误:', error);
-                showConverterStatus(translations['converter-status-error'] + error.message, true);
-            }
-        });
-
-        // 下载转换后的文件
-        downloadConvertedBtn.addEventListener('click', () => {
-            if (!convertedFile) {
-                showConverterStatus('没有可下载的文件', true);
-                return;
-            }
-            
-            const url = URL.createObjectURL(convertedFile);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = convertedFile.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showConverterStatus(translations['download-converted-btn'] + ' ' + translations['converter-status-success']);
-        });
-
-        // 重置转换器
-        resetConverterBtn.addEventListener('click', () => {
-            converterFileInput.value = '';
-            converterFileText.textContent = translations['converter-file-text'];
-            document.getElementById('target-format').value = '';
-            currentFormat.textContent = translations['current-format'] + '未选择文件';
-            filePreview.innerHTML = '<span>文件预览区域</span>';
-            convertBtn.disabled = true;
-            converterStatusBox.classList.add('hidden');
-            converterResultSection.classList.add('hidden');
-            selectedFile = null;
-            convertedFile = null;
-        });
-
-        // 根据格式获取MIME类型
-        function getMimeType(format) {
-            switch(format) {
-                case 'mp3': return 'audio/mpeg';
-                case 'wav': return 'audio/wav';
-                case 'jpg': return 'image/jpeg';
-                case 'png': return 'image/png';
-                case 'ico': return 'image/x-icon';
-                default: return 'application/octet-stream';
-            }
-        }
-
-        // 显示转换状态
-        function showConverterStatus(message, isError = false) {
-            converterStatusBox.classList.remove('hidden');
-            converterStatusText.textContent = message;
-            
-            if (isError) {
-                converterStatusBox.className = 'status-box converter error';
-            } else {
-                converterStatusBox.className = 'status-box converter';
-            }
-        }
-
-        // 格式分类切换
-        document.querySelectorAll('.format-item').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.format-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                
-                // 这里可以添加根据分类筛选格式的逻辑
-                const category = item.textContent;
-                const options = document.getElementById('target-format').options;
-                
-                // 显示所有选项
-                for (let i = 0; i < options.length; i++) {
-                    options[i].hidden = false;
-                }
-                
-                if (category === '音频') {
-                    for (let i = 0; i < options.length; i++) {
-                        const option = options[i];
-                        if (option.value !== 'mp3' && option.value !== 'wav') {
-                            option.hidden = true;
-                        }
-                    }
-                } else if (category === '图片') {
-                    for (let i = 0; i < options.length; i++) {
-                        const option = options[i];
-                        if (option.value !== 'jpg' && option.value !== 'png' && option.value !== 'ico') {
-                            option.hidden = true;
-                        }
-                    }
-                }
-            });
-        });
-
-        // 初始化应用
-        document.addEventListener('DOMContentLoaded', () => {
-            updateTexts();
-            updateDeviceInfo();
-            
-            // 添加拖放功能
-            const converterFileLabel = document.querySelector('.file-input-label');
-            
-            converterFileLabel.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                converterFileLabel.style.background = '#e8f0fe';
-                converterFileLabel.style.borderColor = '#4285f4';
-            });
-            
-            converterFileLabel.addEventListener('dragleave', () => {
-                converterFileLabel.style.background = '';
-                converterFileLabel.style.borderColor = '';
-            });
-            
-            converterFileLabel.addEventListener('drop', (e) => {
-                e.preventDefault();
-                converterFileLabel.style.background = '';
-                converterFileLabel.style.borderColor = '';
-                
-                if (e.dataTransfer.files.length) {
-                    converterFileInput.files = e.dataTransfer.files;
-                    const event = new Event('change');
-                    converterFileInput.dispatchEvent(event);
-                }
-            });
-        });
-
-        // 辅助函数：读取文件为ArrayBuffer
-        function readFileAsArrayBuffer(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsArrayBuffer(file);
-            });
-        }
-
-        // 辅助函数：更新进度条
-        function updateProgress(percent) {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            progressBar.style.width = `${percent}%`;
-            progressText.textContent = `${percent}%`;
-        }
-
-        // 辅助函数：更新加密进度条
-        function updateEncryptProgress(percent) {
-            const progressBar = document.getElementById('encrypt-progress-bar');
-            const progressText = document.getElementById('encrypt-progress-text');
-            progressBar.style.width = `${percent}%`;
-            progressText.textContent = `${percent}%`;
-        }
-
-        // 辅助函数：显示状态信息
-        function showStatus(message, isError = false) {
-            const statusBox = document.getElementById('status-box');
-            const statusText = document.getElementById('status-text');
-            
-            statusText.textContent = message;
-            statusBox.className = isError ? 'status-box error' : 'status-box';
-        }
-
-        // 辅助函数：显示加密状态信息
-        function showEncryptStatus(message, isError = false) {
-            const statusBox = document.getElementById('encrypt-status-box');
-            const statusText = document.getElementById('encrypt-status-text');
-            
-            statusText.textContent = message;
-            statusBox.className = isError ? 'status-box error' : 'status-box';
-        }
-
-        // 辅助函数：ArrayBuffer转Base64
-        function arrayBufferToBase64(buffer) {
-            let binary = '';
-            const bytes = new Uint8Array(buffer);
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
-            }
-            return btoa(binary);
-        }
-
-        // 辅助函数：Base64转ArrayBuffer
-        function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes;
-        }
-    </script>
-</body>
-</html>
+    
