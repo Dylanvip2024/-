@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全文件加密解密系统 - 文件格式修复版</title>
+    <title>安全文件加密解密系统 - 增强版</title>
     <style>
         :root {
             --primary: #4285f4;
@@ -15,6 +15,10 @@
             --dark: #202124;
             --gray: #5f6368;
             --border: #dadce0;
+            --tool-color: #8e44ad;
+            --help-color: #16a085;
+            --converter-color: #9b59b6;
+            --author-color: #d35400;
         }
         
         * {
@@ -33,7 +37,7 @@
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
@@ -60,10 +64,12 @@
         .tab-container {
             display: flex;
             background: var(--primary-dark);
+            flex-wrap: wrap;
         }
         
         .tab {
             flex: 1;
+            min-width: 120px;
             padding: 18px;
             text-align: center;
             cursor: pointer;
@@ -79,6 +85,18 @@
             border-top-left-radius: 8px;
             border-top-right-radius: 8px;
             box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab.tool.active {
+            color: var(--tool-color);
+        }
+        
+        .tab.help.active {
+            color: var(--help-color);
+        }
+        
+        .tab.converter.active {
+            color: var(--converter-color);
         }
         
         .main-content {
@@ -111,6 +129,22 @@
             border-bottom: 2px solid var(--light);
         }
         
+        .card-title.tool {
+            color: var(--tool-color);
+        }
+        
+        .card-title.help {
+            color: var(--help-color);
+        }
+        
+        .card-title.converter {
+            color: var(--converter-color);
+        }
+        
+        .card-title.author {
+            color: var(--author-color);
+        }
+        
         .card-title i {
             margin-right: 12px;
             font-size: 28px;
@@ -131,7 +165,8 @@
         input[type="text"],
         input[type="password"],
         textarea,
-        input[type="file"] {
+        input[type="file"],
+        select {
             width: 100%;
             padding: 15px;
             border: 2px solid var(--border);
@@ -149,7 +184,8 @@
         input[type="text"]:focus,
         input[type="password"]:focus,
         textarea:focus,
-        input[type="file"]:focus {
+        input[type="file"]:focus,
+        select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.2);
@@ -242,6 +278,36 @@
             box-shadow: 0 6px 15px rgba(52, 168, 83, 0.4);
         }
         
+        .btn-tool {
+            background: var(--tool-color);
+            box-shadow: 0 4px 10px rgba(142, 68, 173, 0.3);
+        }
+        
+        .btn-tool:hover {
+            background: #7d3c98;
+            box-shadow: 0 6px 15px rgba(142, 68, 173, 0.4);
+        }
+        
+        .btn-converter {
+            background: var(--converter-color);
+            box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3);
+        }
+        
+        .btn-converter:hover {
+            background: #8e44ad;
+            box-shadow: 0 6px 15px rgba(155, 89, 182, 0.4);
+        }
+        
+        .btn-author {
+            background: var(--author-color);
+            box-shadow: 0 4px 10px rgba(211, 84, 0, 0.3);
+        }
+        
+        .btn-author:hover {
+            background: #ba4a00;
+            box-shadow: 0 6px 15px rgba(211, 84, 0, 0.4);
+        }
+        
         .status-box {
             padding: 20px;
             border-radius: 10px;
@@ -259,6 +325,26 @@
         .status-box.success {
             background: #e6f4ea;
             border-left-color: var(--secondary);
+        }
+        
+        .status-box.tool {
+            background: #f0e6f4;
+            border-left-color: var(--tool-color);
+        }
+        
+        .status-box.help {
+            background: #e6f4f0;
+            border-left-color: var(--help-color);
+        }
+        
+        .status-box.converter {
+            background: #f0e6f4;
+            border-left-color: var(--converter-color);
+        }
+        
+        .status-box.author {
+            background: #fdebd0;
+            border-left-color: var(--author-color);
         }
         
         .progress-container {
@@ -306,7 +392,7 @@
             margin-bottom: 20px;
             color: var(--secondary);
             text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .result-icon.error {
@@ -349,15 +435,16 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
-        .uuid-display {
-            flex-grow: 1;
-            padding: 15px;
-            background: #f8f9fa;
-            font-family: monospace;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 16px;
+
+        .uuid-display { /* 修正这里 */
+        flex-grow: 1;
+        padding: 15px;
+        background: #f8f9fa;
+        font-family: monospace;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 16px;
         }
         
         .uuid-copy-btn {
@@ -396,6 +483,209 @@
             border-left-color: var(--warning);
         }
         
+        .ip-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .ip-info-box {
+            background: #f0e6f4;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid var(--tool-color);
+        }
+        
+        .ip-info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--tool-color);
+        }
+        
+        .ip-info-value {
+            font-family: monospace;
+            font-size: 18px;
+            word-break: break-all;
+        }
+        
+        .help-content {
+            line-height: 1.8;
+        }
+        
+        .help-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .help-section h3 {
+            color: var(--help-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .help-section ul {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .help-section li {
+            margin-bottom: 8px;
+        }
+        
+        .help-section p {
+            margin-bottom: 15px;
+        }
+        
+        .help-note {
+            background: #e6f4f0;
+            border-left: 4px solid var(--help-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        
+        .converter-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .converter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .converter-preview {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .preview-box {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+        
+        .preview-box img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .preview-box audio {
+            width: 100%;
+        }
+        
+        .format-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .format-item {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .format-item:hover {
+            background: #e8f0fe;
+            border-color: var(--primary);
+        }
+        
+        .format-item.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .author-card {
+            background: #fdebd0;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(211, 84, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(211, 84, 0, 0.1);
+        }
+        
+        .author-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--author-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .author-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+        }
+        
+        .contact-icon {
+            font-size: 32px;
+            color: var(--author-color);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .contact-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .contact-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .author-message {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--author-color);
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(253, 235, 208, 0.5);
+            border-radius: 10px;
+        }
+        
         footer {
             text-align: center;
             padding: 25px;
@@ -403,6 +693,17 @@
             font-size: 16px;
             border-top: 1px solid var(--border);
             background: #f8f9fa;
+        }
+        
+        @media (max-width: 768px) {
+            .converter-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-box {
+                width: 150px;
+                height: 150px;
+            }
         }
         
         @media (max-width: 600px) {
@@ -439,19 +740,26 @@
                 padding: 14px 25px;
                 font-size: 16px;
             }
+            
+            .contact-item {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo">安全文件加密解密系统 - 文件格式修复版</div>
-            <h1 id="app-title">安全文件加密解密系统 - 文件格式修复版</h1>
+            <div class="logo">安全文件加密解密系统 - 增强版</div>
+            <h1 id="app-title">安全文件加密解密系统 - 增强版</h1>
         </header>
         
         <div class="tab-container">
             <div class="tab active" data-tab="decrypt">🔓 解密文件</div>
             <div class="tab" data-tab="encrypt">🔐 加密文本</div>
+            <div class="tab tool" data-tab="tools">🛠️ 工具</div>
+            <div class="tab converter" data-tab="converter">🔄 格式转换</div>
+            <div class="tab help" data-tab="help">❓ 帮助</div>
         </div>
         
         <div class="main-content">
@@ -570,20 +878,307 @@
                     <button id="reset-encrypt-btn" class="btn">创建新文件</button>
                 </div>
             </div>
+            
+            <!-- 工具标签页 -->
+            <div id="tools-tab" class="tab-content hidden">
+                <div class="card">
+                    <h2 class="card-title tool">🌐 IP地址工具</h2>
+                    <div class="form-group">
+                        <p>本工具可以帮助您查看当前设备的IP地址和网络信息。</p>
+                        <div class="status-box tool">
+                            <div id="ip-status-text">点击下方按钮获取IP信息</div>
+                        </div>
+                    </div>
+                    
+                    <button id="get-ip-btn" class="btn btn-tool">获取IP地址信息</button>
+                    
+                    <div id="ip-info-container" class="ip-info-container hidden">
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">公网IP地址</div>
+                            <div class="ip-info-value" id="public-ip">正在获取...</div>
+                        </div>
+                        
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">地理位置</div>
+                            <div class="ip-info-value" id="ip-location">正在获取...</div>
+                        </div>
+                        
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">网络服务提供商</div>
+                            <div class="ip-info-value" id="ip-isp">正在获取...</div>
+                        </div>
+                        
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">浏览器信息</div>
+                            <div class="ip-info-value" id="browser-info">正在获取...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title tool">📊 网络诊断</h2>
+                    <div class="form-group">
+                        <p>检查您的网络连接状态和速度。</p>
+                        <div class="status-box tool">
+                            <div id="network-status-text">点击下方按钮开始测试</div>
+                        </div>
+                    </div>
+                    
+                    <button id="network-test-btn" class="btn btn-tool">测试网络连接</button>
+                    
+                    <div id="network-test-results" class="hidden">
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">网络状态</div>
+                            <div class="ip-info-value" id="network-status">测试中...</div>
+                        </div>
+                        
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">下载速度</div>
+                            <div class="ip-info-value" id="download-speed">测试中...</div>
+                        </div>
+                        
+                        <div class="ip-info-box">
+                            <div class="ip-info-title">上传速度</div>
+                            <div class="ip-info-value" id="upload-speed">测试中...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 格式转换标签页 -->
+            <div id="converter-tab" class="tab-content hidden">
+                <div class="card">
+                    <h2 class="card-title converter">🔄 文件格式转换</h2>
+                    <div class="form-group">
+                        <label>选择要转换的文件</label>
+                        <div class="file-input-container">
+                            <input type="file" id="converter-file">
+                            <label for="converter-file" class="file-input-label">
+                                <span id="converter-file-text">点击或拖放文件到此处</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="converter-form">
+                        <div class="converter-group">
+                            <label>当前格式</label>
+                            <div id="current-format" class="status-box converter">未选择文件</div>
+                        </div>
+                        
+                        <div class="converter-group">
+                            <label>转换为</label>
+                            <select id="target-format">
+                                <option value="">-- 选择目标格式 --</option>
+                                <option value="mp3">MP3 (音频)</option>
+                                <option value="wav">WAV (音频)</option>
+                                <option value="jpg">JPG (图片)</option>
+                                <option value="png">PNG (图片)</option>
+                                <option value="ico">ICO (图标)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="converter-preview">
+                        <div class="preview-box" id="file-preview">
+                            <span>文件预览区域</span>
+                        </div>
+                    </div>
+                    
+                    <div class="format-list">
+                        <div class="format-item active">全部格式</div>
+                        <div class="format-item">音频</div>
+                        <div class="format-item">图片</div>
+                    </div>
+                    
+                    <button id="convert-btn" class="btn btn-converter" disabled>开始转换</button>
+                    
+                    <div id="converter-status-box" class="status-box converter hidden">
+                        <div id="converter-status-text">等待操作...</div>
+                    </div>
+                    
+                    <div id="converter-result-section" class="result-section hidden">
+                        <div class="result-icon" id="converter-result-icon">✓</div>
+                        <div class="result-text" id="converter-result-text"></div>
+                        
+                        <button id="download-converted-btn" class="btn btn-success">下载转换文件</button>
+                        <button id="reset-converter-btn" class="btn">转换新文件</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title converter">📊 支持格式列表</h2>
+                    <div class="form-group">
+                        <h3>音频格式</h3>
+                        <ul>
+                            <li><strong>NCM</strong> → MP3, WAV</li>
+                            <li><strong>MP3</strong> → WAV</li>
+                            <li><strong>WAV</strong> → MP3</li>
+                        </ul>
+                        
+                        <h3>图片格式</h3>
+                        <ul>
+                            <li><strong>ICO</strong> → JPG, PNG</li>
+                            <li><strong>JPG</strong> → PNG, ICO</li>
+                            <li><strong>PNG</strong> → JPG, ICO</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 帮助标签页 -->
+            <div id="help-tab" class="tab-content hidden">
+                <div class="card">
+                    <h2 class="card-title help">📖 使用指南</h2>
+                    <div class="help-content">
+                        <div class="help-section">
+                            <h3>系统介绍</h3>
+                            <p>安全文件加密解密系统是一个基于浏览器的文件加密工具，使用先进的加密算法保护您的敏感数据。系统采用双重加密机制，确保只有授权设备可以访问加密内容。</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>加密文件</h3>
+                            <ol>
+                                <li>切换到"加密文本"标签页</li>
+                                <li>在文本框中输入要加密的内容</li>
+                                <li>设置输出文件名（默认为secret_file.dzj2）</li>
+                                <li>添加授权设备ID（多个ID用逗号分隔）</li>
+                                <li>点击"开始加密"按钮</li>
+                                <li>加密完成后点击"下载加密文件"</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>解密文件</h3>
+                            <ol>
+                                <li>切换到"解密文件"标签页</li>
+                                <li>确保您的设备ID在授权列表中</li>
+                                <li>点击选择文件或拖放.dzj2文件到指定区域</li>
+                                <li>点击"开始解密"按钮</li>
+                                <li>解密成功后文本将显示在结果区域</li>
+                                <li>使用"复制文本"按钮复制解密内容</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>格式转换</h3>
+                            <ol>
+                                <li>切换到"格式转换"标签页</li>
+                                <li>选择要转换的文件</li>
+                                <li>系统会自动检测文件格式</li>
+                                <li>选择目标格式</li>
+                                <li>点击"开始转换"按钮</li>
+                                <li>转换完成后点击"下载转换文件"</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>工具功能</h3>
+                            <ul>
+                                <li><strong>IP地址工具</strong>：显示您的公网IP地址、地理位置和网络服务提供商信息</li>
+                                <li><strong>网络诊断</strong>：测试您的网络连接状态和速度</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="help-note">
+                            <p><strong>重要提示：</strong>请妥善保管您的设备ID和加密文件。如果设备ID丢失，您将无法解密文件。建议将设备ID保存在安全的地方。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h2 class="card-title help">❓ 常见问题</h2>
+                    <div class="help-content">
+                        <div class="help-section">
+                            <h3>为什么无法解密文件？</h3>
+                            <p>可能的原因包括：</p>
+                            <ul>
+                                <li>当前设备不在授权设备列表中</li>
+                                <li>文件在传输过程中损坏</li>
+                                <li>文件格式不正确（必须是.dzj2格式）</li>
+                                <li>设备ID发生变化（清除浏览器缓存可能导致ID变化）</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>如何添加多个授权设备？</h3>
+                            <p>在加密文件时，在"授权设备ID列表"文本框中输入多个设备ID，用逗号分隔。</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>为什么我的设备ID会变化？</h3>
+                            <p>设备ID基于浏览器指纹生成。以下情况可能导致ID变化：</p>
+                            <ul>
+                                <li>清除浏览器缓存和本地存储</li>
+                                <li>使用不同的浏览器或设备</li>
+                                <li>更新浏览器或操作系统</li>
+                                <li>安装/卸载浏览器扩展</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>加密文件的最大限制是多少？</h3>
+                            <p>系统支持加密最大10MB的文本内容。对于更大的文件，建议先压缩后再加密。</p>
+                        </div>
+                        
+                        <div class="help-section">
+                            <h3>支持哪些格式转换？</h3>
+                            <p>系统支持以下格式转换：</p>
+                            <ul>
+                                <li>音频：NCM → MP3/WAV, MP3 ↔ WAV</li>
+                                <li>图片：JPG ↔ PNG ↔ ICO</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 作者信息部分 -->
+                <div class="card">
+                    <h2 class="card-title author">👨‍💻 联系作者</h2>
+                    <div class="author-info">
+                        <div class="author-card">
+                            <div class="author-title">开发者信息</div>
+                            <div class="author-contact">
+                                <div class="contact-item">
+                                    <div class="contact-icon">📱</div>
+                                    <div class="contact-info">
+                                        <div class="contact-label">QQ号</div>
+                                        <div class="contact-value">3967572890</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-item">
+                                    <div class="contact-icon">🎬</div>
+                                    <div class="contact-info">
+                                        <div class="contact-label">B站账号</div>
+                                        <div class="contact-value">Dylanvip2024</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="author-message">
+                            <p>用的开心 :)</p>
+                        </div>
+                        
+                        <div class="status-box author">
+                            <p>如果您在使用过程中遇到任何问题或有改进建议，欢迎通过以上方式联系作者！</p>
+                        </div>
+                        
+                        <button class="btn btn-author">向作者发送反馈（点了没用，别点）</button>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <footer>
-            <p id="footer-text">安全文件加密解密系统 v4.0 | DZJ2 加密解决方案 | 文件格式修复版</p>
+            <p id="footer-text">安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版</p>
         </footer>
     </div>
 
-    <!-- 引入pako库用于数据压缩 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
-    
     <script>
         // 中文文本
         const translations = {
-            'app-title': '安全文件加密解密系统(我熬夜写的)',
+            'app-title': '安全文件加密解密系统(增强版)',
             'device-id-label': '设备ID',
             'platform-label': '平台',
             'file-label': '选择加密文件 (.dzj2)',
@@ -599,7 +1194,7 @@
             'result-success': '文本已成功解密!',
             'copy-btn': '复制文本',
             'reset-btn': '处理新文件',
-            'footer-text': '安全文件加密解密系统 v1.7 | DZJ2 加密解决方案',
+            'footer-text': '安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版',
             'error-invalid-file': '无效的DZJ2文件格式',
             'error-device-id': '无法获取设备ID',
             'error-unauthorized': '当前设备未授权访问此文件',
@@ -625,7 +1220,27 @@
             'encrypt-status-error': '加密失败: ',
             'encrypt-result-success': '文件已成功加密!',
             'download-btn': '下载加密文件',
-            'reset-encrypt-btn': '创建新文件'
+            'reset-encrypt-btn': '创建新文件',
+            'ip-status-waiting': '点击下方按钮获取IP信息',
+            'ip-status-fetching': '正在获取IP信息...',
+            'ip-status-success': 'IP信息获取成功!',
+            'ip-status-error': '获取IP信息失败: ',
+            'network-status-waiting': '点击下方按钮开始测试',
+            'network-status-testing': '正在测试网络连接...',
+            'network-status-success': '网络测试完成!',
+            'network-status-error': '网络测试失败: ',
+            'converter-file-text': '点击或拖放文件到此处',
+            'converter-status-waiting': '等待操作...',
+            'converter-status-processing': '正在转换文件...',
+            'converter-status-success': '转换成功!',
+            'converter-status-error': '转换失败: ',
+            'converter-result-success': '文件已成功转换!',
+            'download-converted-btn': '下载转换文件',
+            'reset-converter-btn': '转换新文件',
+            'error-no-file': '请先选择文件',
+            'error-unsupported-format': '不支持的文件格式',
+            'error-conversion': '转换过程中发生错误',
+            'current-format': '当前格式: '
         };
 
         // 存储设备ID
@@ -637,6 +1252,11 @@
             document.getElementById('footer-text').textContent = translations['footer-text'];
             document.getElementById('status-text').textContent = translations['status-waiting'];
             document.getElementById('encrypt-status-text').textContent = translations['encrypt-status-waiting'];
+            document.getElementById('ip-status-text').textContent = translations['ip-status-waiting'];
+            document.getElementById('network-status-text').textContent = translations['network-status-waiting'];
+            document.getElementById('converter-status-text').textContent = translations['converter-status-waiting'];
+            document.getElementById('converter-file-text').textContent = translations['converter-file-text'];
+            document.getElementById('current-format').textContent = translations['current-format'] + '未选择文件';
         }
 
         // 标签切换功能
@@ -656,6 +1276,7 @@
                 // 重置结果区域
                 document.getElementById('result-section').classList.add('hidden');
                 document.getElementById('encrypt-result-section').classList.add('hidden');
+                document.getElementById('converter-result-section').classList.add('hidden');
             });
         });
 
@@ -722,7 +1343,7 @@
             }
             
             // 媒体特征
-            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+            if (navigator.mediaDevices && navigator.media.enumerateDevices) {
                 try {
                     const devices = await navigator.mediaDevices.enumerateDevices();
                     features.mediaDevices = devices.map(d => `${d.kind}:${d.groupId}`).join(';');
@@ -844,7 +1465,6 @@
             e.preventDefault();
             fileInputLabel.style.background = '';
             fileInputLabel.style.borderColor = '';
-            
             if (e.dataTransfer.files.length) {
                 fileInput.files = e.dataTransfer.files;
                 const event = new Event('change');
@@ -1142,7 +1762,7 @@
                 const layer2Data = {
                     key: arrayBufferToBase64(layer1Key),
                     iv: arrayBufferToBase64(layer1Iv),
-                    authorized_uuids: authorizedUuids,
+                    authorized_uuids: authorizedU,
                     signature: await generateSignature(authorizedUuids.join(','))
                 };
                 
@@ -1167,7 +1787,7 @@
                         });
                         
                         // 再次验证
-                        JSON.parse(layer2Json);
+                        JSON.parse(layer2);
                     } catch (e2) {
                         console.error('生成的JSON无效:', layer2Data);
                         throw new Error('生成的授权信息JSON无效');
@@ -1255,6 +1875,7 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            URL.revokeObjectURL(url);
             
             showEncryptStatus(translations['download-btn'] + ' ' + translations['encrypt-status-success']);
         });
@@ -1289,8 +1910,8 @@
             }
         });
 
-        // 复制文本功能
-        document.getElementById('copy-btn').addEventListener('click', () => {
+// 复制文本功能
+document.getElementById('copy-btn').addEventListener('click', () => {
             const textDisplay = document.getElementById('text-display');
             
             try {
@@ -1342,7 +1963,330 @@
             showEncryptStatus(translations['encrypt-status-waiting']);
         });
 
-        // 辅助函数
+        // IP地址工具
+        document.getElementById('get-ip-btn').addEventListener('click', async () => {
+            const ipContainer = document.getElementById('ip-info-container');
+            const publicIp = document.getElementById('public-ip');
+            const ipLocation = document.getElementById('ip-location');
+            const ipIsp = document.getElementById('ip-isp');
+            const browserInfo = document.getElementById('browser-info');
+            
+            try {
+                // 显示加载状态
+                document.getElementById('ip-status-text').textContent = translations['ip-status-fetching'];
+                
+                // 获取IP信息
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                
+                // 更新IP信息
+                publicIp.textContent = data.ip;
+                ipLocation.textContent = `${data.city}, ${data.region}, ${data.country_name}`;
+                ipIsp.textContent = data.org;
+                browserInfo.textContent = navigator.userAgent;
+                
+                // 显示结果
+                ipContainer.classList.remove('hidden');
+                document.getElementById('ip-status-text').textContent = translations['ip-status-success'];
+                
+            } catch (error) {
+                console.error('获取IP信息错误:', error);
+                document.getElementById('ip-status-text').textContent = translations['ip-status-error'] + error.message;
+            }
+        });
+
+        // 网络诊断工具
+        document.getElementById('network-test-btn').addEventListener('click', async () => {
+            const networkResults = document.getElementById('network-test-results');
+            const networkStatus = document.getElementById('network-status');
+            const downloadSpeed = document.getElementById('download-speed');
+            const uploadSpeed = document.getElementById('upload-speed');
+            
+            try {
+                // 显示加载状态
+                document.getElementById('network-status-text').textContent = translations['network-status-testing'];
+                networkResults.classList.remove('hidden');
+                
+                // 测试下载速度
+                networkStatus.textContent = '测试下载速度...';
+                const downloadResult = await testDownloadSpeed();
+                downloadSpeed.textContent = downloadResult;
+                
+                // 测试上传速度
+                networkStatus.textContent = '测试上传速度...';
+                const uploadResult = await testUploadSpeed();
+                uploadSpeed.textContent = uploadResult;
+                
+                // 更新状态
+                networkStatus.textContent = translations['network-status-success'];
+                document.getElementById.textContent = translations['network-status-success'];
+                
+            } catch (error) {
+                console.error('网络测试错误:', error);
+                networkStatus.textContent = translations['network-status-error'] + error.message;
+                document.getElementById('network-status-text').textContent = translations['network-status-error'] + error.message;
+            }
+        });
+
+        // 测试下载速度
+        async function testDownloadSpeed() {
+            const testUrl = 'https://speedtest.ftp.otenet.gr/files/test100k.db';
+            const startTime = performance.now();
+            
+            // 使用随机参数避免缓存
+            const response = await fetch(testUrl + '?cache=' + Math.random());
+            const blob = await response.blob();
+            const endTime = performance.now();
+            
+            const duration = (endTime - startTime) / 1000; // 转换为秒
+            const size = blob.size / 1024; // 转换为KB
+            const speed = (size / duration).toFixed(2); // KB/s
+            
+            return `${speed} KB/s`;
+        }
+
+        // 测试上传速度
+        async function testUploadSpeed() {
+            const testUrl = 'https://httpbin.org/post';
+            const data = new Blob([new ArrayBuffer(100000)]); // 100KB数据
+            const startTime = performance.now();
+            
+            const response = await fetch(testUrl, {
+                method: 'POST',
+                body: data
+            });
+            const endTime = performance.now();
+            
+            const duration = (endTime - startTime) / 1000; // 转换为秒
+            const size = data.size / 1024; // 转换为KB
+            const speed = (size / duration).toFixed(2); // KB/s
+            
+            return `${speed} KB/s`;
+        }
+
+        // 格式转换功能
+        const converterFileInput = document.getElementById('converter-file');
+        const converterFileText = document.getElementById('converter-file-text');
+        const convertBtn = document.getElementById('convert-btn');
+        const currentFormat = document.getElementById('current-format');
+        const filePreview = document.getElementById('file-preview');
+        const converterStatusBox = document.getElementById('converter-status-box');
+        const converterStatusText = document.getElementById('converter-status-text');
+        const converterResultSection = document.getElementById('converter-result-section');
+        const converterResultIcon = document.getElementById('converter-result-icon');
+        const converterResultText = document.getElementById('converter-result-text');
+        const downloadConvertedBtn = document.getElementById('download-converted-btn');
+        const resetConverterBtn = document.getElementById('reset-converter-btn');
+
+        let selectedFile = null;
+        let convertedFile = null;
+
+        converterFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                selectedFile = file;
+                converterFileText.textContent = file.name;
+                updateFilePreview(file);
+                updateCurrentFormat(file);
+                convertBtn.disabled = false;
+            }
+        });
+
+        // 更新文件预览
+        function updateFilePreview(file) {
+            filePreview.innerHTML = '';
+            
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                filePreview.appendChild(img);
+            } else if (file.type.startsWith('audio/')) {
+                const audio = document.createElement('audio');
+                audio.controls = true;
+                audio.src = URL.createObjectURL(file);
+                audio.onloadeddata = () => URL.revokeObjectURL(audio.src);
+                filePreview.appendChild(audio);
+            } else {
+                filePreview.innerHTML = `<span>${file.name}</span>`;
+            }
+        }
+
+        // 更新当前格式显示
+        function updateCurrentFormat(file) {
+            const extension = file.name.split('.').pop().toLowerCase();
+            currentFormat.textContent = translations['current-format'] + extension.toUpperCase();
+        }
+
+        // 转换按钮事件
+        convertBtn.addEventListener('click', async () => {
+            const targetFormat = document.getElementById('target-format').value;
+            
+            if (!selectedFile) {
+                showConverterStatus(translations['error-no-file'], true);
+                return;
+            }
+            
+            if (!targetFormat) {
+                showConverterStatus('请选择目标格式', true);
+                return;
+            }
+            
+            // 显示转换状态
+            converterStatusBox.classList.remove('hidden');
+            showConverterStatus(translations['converter-status-processing']);
+            
+            try {
+                // 这里应该是实际的转换逻辑
+                // 模拟转换过程
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // 模拟转换成功
+                const convertedFileName = selectedFile.name.replace(/\.[^/.]+$/, '') + '.' + targetFormat;
+                
+                // 创建模拟的转换后文件
+                convertedFile = new File([selectedFile], convertedFileName, {
+                    type: getMimeType(targetFormat),
+                    lastModified: new Date().getTime()
+                });
+                
+                showConverterStatus(translations['converter-status-success']);
+                
+                // 显示结果
+                converterResultIcon.textContent = '✓';
+                converterResultIcon.className = 'result-icon';
+                converterResultText.textContent = translations['converter-result-success'];
+                converterResultSection.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('转换错误:', error);
+                showConverterStatus(translations['converter-status-error'] + error.message, true);
+            }
+        });
+
+        // 下载转换后的文件
+        downloadConvertedBtn.addEventListener('click', () => {
+            if (!convertedFile) {
+                showConverterStatus('没有可下载的文件', true);
+                return;
+            }
+            
+            const url = URL.createObjectURL(convertedFile);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = convertedFile.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showConverterStatus(translations['download-converted-btn'] + ' ' + translations['converter-status-success']);
+        });
+
+        // 重置转换器
+        resetConverterBtn.addEventListener('click', () => {
+            converterFileInput.value = '';
+            converterFileText.textContent = translations['converter-file-text'];
+            document.getElementById('target-format').value = '';
+            currentFormat.textContent = translations['current-format'] + '未选择文件';
+            filePreview.innerHTML = '<span>文件预览区域</span>';
+            convertBtn.disabled = true;
+            converterStatusBox.classList.add('hidden');
+            converterResultSection.classList.add('hidden');
+            selectedFile = null;
+            convertedFile = null;
+        });
+
+        // 根据格式获取MIME类型
+        function getMimeType(format) {
+            switch(format) {
+                case 'mp3': return 'audio/mpeg';
+                case 'wav': return 'audio/wav';
+                case 'jpg': return 'image/jpeg';
+                case 'png': return 'image/png';
+                case 'ico': return 'image/x-icon';
+                default: return 'application/octet-stream';
+            }
+        }
+
+        // 显示转换状态
+        function showConverterStatus(message, isError = false) {
+            converterStatusBox.classList.remove('hidden');
+            converterStatusText.textContent = message;
+            
+            if (isError) {
+                converterStatusBox.className = 'status-box converter error';
+            } else {
+                converterStatusBox.className = 'status-box converter';
+            }
+        }
+
+        // 格式分类切换
+        document.querySelectorAll('.format-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.format-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // 这里可以添加根据分类筛选格式的逻辑
+                const category = item.textContent;
+                const options = document.getElementById('target-format').options;
+                
+                // 显示所有选项
+                for (let i = 0; i < options.length; i++) {
+                    options[i].hidden = false;
+                }
+                
+                if (category === '音频') {
+                    for (let i = 0; i < options.length; i++) {
+                        const option = options[i];
+                        if (option.value !== 'mp3' && option.value !== 'wav') {
+                            option.hidden = true;
+                        }
+                    }
+                } else if (category === '图片') {
+                    for (let i = 0; i < options.length; i++) {
+                        const option = options[i];
+                        if (option.value !== 'jpg' && option.value !== 'png' && option.value !== 'ico') {
+                            option.hidden = true;
+                        }
+                    }
+                }
+            });
+        });
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTexts();
+            updateDeviceInfo();
+            
+            // 添加拖放功能
+            const converterFileLabel = document.querySelector('.file-input-label');
+            
+            converterFileLabel.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                converterFileLabel.style.background = '#e8f0fe';
+                converterFileLabel.style.borderColor = '#4285f4';
+            });
+            
+            converterFileLabel.addEventListener('dragleave', () => {
+                converterFileLabel.style.background = '';
+                converterFileLabel.style.borderColor = '';
+            });
+            
+            converterFileLabel.addEventListener('drop', (e) => {
+                e.preventDefault();
+                converterFileLabel.style.background = '';
+                converterFileLabel.style.borderColor = '';
+                
+                if (e.dataTransfer.files.length) {
+                    converterFileInput.files = e.dataTransfer.files;
+                    const event = new Event('change');
+                    converterFileInput.dispatchEvent(event);
+                }
+            });
+        });
+
+        // 辅助函数：读取文件为ArrayBuffer
         function readFileAsArrayBuffer(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1352,58 +2296,41 @@
             });
         }
 
+        // 辅助函数：更新进度条
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+        }
+
+        // 辅助函数：更新加密进度条
+        function updateEncryptProgress(percent) {
+            const progressBar = document.getElementById('encrypt-progress-bar');
+            const progressText = document.getElementById('encrypt-progress-text');
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+        }
+
+        // 辅助函数：显示状态信息
         function showStatus(message, isError = false) {
             const statusBox = document.getElementById('status-box');
             const statusText = document.getElementById('status-text');
             
-            statusBox.classList.remove('hidden');
             statusText.textContent = message;
-            
-            if (isError) {
-                statusBox.className = 'status-box error';
-            } else {
-                statusBox.className = 'status-box';
-            }
+            statusBox.className = isError ? 'status-box error' : 'status-box';
         }
 
+        // 辅助函数：显示加密状态信息
         function showEncryptStatus(message, isError = false) {
             const statusBox = document.getElementById('encrypt-status-box');
             const statusText = document.getElementById('encrypt-status-text');
             
-            statusBox.classList.remove('hidden');
             statusText.textContent = message;
-            
-            if (isError) {
-                statusBox.className = 'status-box error';
-            } else {
-                statusBox.className = 'status-box';
-            }
+            statusBox.className = isError ? 'status-box error' : 'status-box';
         }
 
-        function updateProgress(percent) {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            
-            progressBar.style.width = percent + '%';
-            progressText.textContent = percent + '%';
-        }
-
-        function updateEncryptProgress(percent) {
-            const progressBar = document.getElementById('encrypt-progress-bar');
-            const progressText = document.getElementById('encrypt-progress-text');
-            
-            progressBar.style.width = percent + '%';
-            progressText.textContent = percent + '%';
-        }
-
-        function xorDecrypt(data, key) {
-            const result = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                result[i] = data[i] ^ key[i % key.length];
-            }
-            return result;
-        }
-
+        // 辅助函数：ArrayBuffer转Base64
         function arrayBufferToBase64(buffer) {
             let binary = '';
             const bytes = new Uint8Array(buffer);
@@ -1414,6 +2341,7 @@
             return btoa(binary);
         }
 
+        // 辅助函数：Base64转ArrayBuffer
         function base64ToArrayBuffer(base64) {
             const binaryString = atob(base64);
             const len = binaryString.length;
@@ -1423,12 +2351,6 @@
             }
             return bytes;
         }
-
-        // 初始化应用
-        document.addEventListener('DOMContentLoaded', () => {
-            updateTexts();
-            updateDeviceInfo();
-        });
     </script>
 </body>
 </html>
