@@ -1161,7 +1161,7 @@
                 'result-success': '文本已成功解密!',
                 'copy-btn': '复制文本',
                 'reset-btn': '处理新文件',
-                'footer-text': '安全文件加密解密系统 v2.8 | DZJ2 加密解决方案',
+                'footer-text': '安全文件加密解密系统 v3.0 | DZJ2 加密解决方案 | 增强版',
                 'error-invalid-file': '无效的DZJ2文件格式',
                 'error-device-id': '无法获取设备ID',
                 'error-unauthorized': '当前设备未授权访问此文件',
@@ -1179,7 +1179,7 @@
                 'authorized-error': '无法验证授权状态',
                 'text-input-label': '输入要加密的文本',
                 'file-name-label': '输出文件名',
-                'authorized-devices-label': '授权设备ID列表 (用逗号分隔)',
+                'authorized-devices-label': '授权设备ID列表 (每行一个ID)',
                 'encrypt-btn': '开始加密',
                 'encrypt-status-waiting': '等待操作...',
                 'encrypt-status-processing': '正在加密数据...',
@@ -1192,7 +1192,7 @@
                 'ip-status-fetching': '正在获取IP信息...',
                 'ip-status-success': 'IP信息获取成功!',
                 'ip-status-error': '获取IP信息失败: ',
-                'network-status-waiting': '点击下方按钮开始测试',
+                'network-status-waiting': '点击下方按钮开始极测试',
                 'network-status-testing': '正在测试网络连接...',
                 'network-status-success': '网络测试完成!',
                 'network-status-error': '网络测试失败: ',
@@ -1209,10 +1209,10 @@
                 'error-conversion': '转换过程中发生错误',
                 'current-format': '当前格式: '
             };
-        
+
             // 存储设备ID
             let deviceId = '';
-        
+
             // 更新界面文本
             function updateTexts() {
                 document.getElementById('app-title').textContent = translations['app-title'];
@@ -1225,7 +1225,7 @@
                 document.getElementById('converter-file-text').textContent = translations['converter-file-text'];
                 document.getElementById('current-format').textContent = translations['current-format'] + '未选择文件';
             }
-        
+
             // 标签切换功能
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1246,41 +1246,39 @@
                     document.getElementById('converter-result-section').classList.add('hidden');
                 });
             });
-        
+
             // 获取设备ID - 修复UUID生成机制
             async function getDeviceId() {
                 try {
-                           // 尝试从本地存储获取设备ID
+                    // 尝试从本地存储获取设备ID
                     const storedDeviceId = localStorage.getItem('secure_device_id');
                     if (storedDeviceId) {
-                    return storedDeviceId;
+                        return storedDeviceId;
                     }
-        
-        // 收集设备特征 - 增强移动设备支持
-                    const features = await collectDeviceFeatures();
-        
-        // 生成特征字符串 - 确保包含足够的信息
-                    const featureString = JSON.stringify(features) + 
-                                    Math.random().toString(36).substring(2, 15) + 
-                                    new Date().getTime();
-        
-        // 使用SHA-256生成哈希
+                    
+                    // 使用更稳定的特征集合
+                    const deviceFeatures = [
+                        navigator.userAgent,
+                        navigator.platform,
+                        screen.width,
+                        screen.height,
+                        navigator.languages[0],
+                        navigator.hardwareConcurrency,
+                        navigator.deviceMemory,
+                        new Date().getTime()
+                    ].join('|');
+                    
+                    // 使用SHA-256生成64字符的十六进制ID
                     const encoder = new TextEncoder();
-                    const data = encoder.encode(featureString);
-        
-        // 使用更可靠的哈希方法
+                    const data = encoder.encode(deviceFeatures);
                     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
                     const hashArray = Array.from(new Uint8Array(hashBuffer));
-        
-        // 将哈希转换为16进制字符串
                     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        // 确保ID长度足够（至少32字符）
-                    const deviceId = 'sec-' + hashHex.substring(0, 32);
-        
-        // 存储设备ID
+                    const deviceId = 'sec-' + hashHex;
+                    
+                    // 存储设备ID
                     localStorage.setItem('secure_device_id', deviceId);
-        
+                    
                     return deviceId;
                 } catch (e) {
                     console.error('获取设备ID错误:', e);
@@ -1288,111 +1286,9 @@
                 }
             }
 
-// 收集设备特征 - 增强移动设备支持
-            async function collectDeviceFeatures() {
-                const features = {};
-    
-    // 基本设备信息
-                features.userAgent = navigator.userAgent;
-                features.platform = navigator.platform;
-                features.languages = navigator.languages.join(',');
-                features.screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
-                features.hardwareConcurrency = navigator.hardwareConcurrency || 'unknown';
-                features.deviceMemory = navigator.deviceMemory || 'unknown';
-                features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                features.maxTouchPoints = navigator.maxTouchPoints || 0;
-                features.devicePixelRatio = window.devicePixelRatio || 1;
-    
-    // 添加更多移动设备特征
-                features.orientation = screen.orientation ? screen.orientation.type : 'unknown';
-                features.vendor = navigator.vendor || 'unknown';
-                features.product = navigator.product || 'unknown';
-                features.appVersion = navigator.appVersion || 'unknown';
-    
-    // 添加性能信息
-                if (window.performance && window.performance.memory) {
-                    features.jsHeapSizeLimit = window.performance.memory.jsHeapSizeLimit || 'unknown';
-                    features.totalJSHeapSize = window.performance.memory.totalJSHeapSize || 'unknown';
-                    features.usedJSHeapSize = window.performance.memory.usedJSHeapSize || 'unknown';
-                }
-    
-    // 添加时间戳
-                    features.timestamp = new Date().getTime();
-    
-    // WebGL特征 - 移动设备可能不支持
-                try {
-                    const canvas = document.createElement('canvas');
-                    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                    if (gl) {
-                        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                        if (debugInfo) {
-                            features.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-                            features.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                        }
-                    }
-                } catch (e) {
-                    console.warn('无法获取WebGL信息');
-                    features.webglError = 'WebGL not supported';
-                }
-    
-    // 媒体特征 - 移动设备可能不支持
-                try {
-                    if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-                        const devices = await navigator.mediaDevices.enumerateDevices();
-                        features.mediaDevices = devices.map(d => `${d.kind}:${d.groupId}`).join(';');
-                    }
-                } catch (e) {
-                    console.warn('无法获取媒体设备信息');
-                    features.mediaError = 'Media devices not accessible';
-                }
-    
-    // 网络特征 - 移动设备可能不支持
-                try {
-                    if (navigator.connection) {
-                        const conn = navigator.connection;
-                        features.connectionType = conn.type;
-                        features.effectiveType = conn.effectiveType;
-                        features.downlink = conn.downlink;
-                        features.rtt = conn.rtt;
-                    }
-                } catch (e) {
-                    console.warn('无法获取网络信息');
-                    features.networkError = 'Network info not accessible';
-                }
-    
-                // 字体特征 - 移动设备可能不支持
-                try {
-                    const fontList = [];
-                    const testString = "mmMwWLliI0O&1";
-                    const testSize = '72px';
-                    const fonts = [
-                        'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold',
-                        'Courier New', 'Georgia', 'Times New Roman', 'Trebuchet MS',
-                        'Verdana', 'Comic Sans MS', 'Impact', 'Lucida Console',
-                        'Palatino Linotype', 'Tahoma', 'Garamond', 'Bookman'
-                    ];
-        
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-        
-                    for (const font of fonts) {
-                        context.font = `${testSize} "${font}"`;
-                        const width = context.measureText(testString).width;
-                        fontList.push(`${font}:${width}`);
-                    }
-        
-                    features.fonts = fontList.join(';');
-                } catch (e) {
-                    console.warn('无法获取字体信息');
-                    features.fontError = 'Font info not accessible';
-                }
-    
-                return features;
-            }
-
-            // 备用设备ID生成方法 - 增强移动设备支持
+            // 备用设备ID生成方法（确保64字符长度）
             function generateFallbackId() {
-                // 使用更可靠的方法生成ID
+                // 使用更简单的方法生成ID
                 const fallbackInfo = [
                     navigator.userAgent,
                     navigator.platform,
@@ -1402,20 +1298,19 @@
                     new Date().getTime(),
                     Math.random().toString(36).substring(2, 15)
                 ].join('|');
-    
+                
                 let hash = 0;
                 for (let i = 0; i < fallbackInfo.length; i++) {
-                const char = fallbackInfo.charCodeAt(i);
+                    const char = fallbackInfo.charCodeAt(i);
                     hash = (hash << 5) - hash + char;
                     hash = hash & hash; // 转换为32位整数
                 }
-    
-    // 确保ID长度足够（至少16字符）
-                const baseId = 'sec-' + Math.abs(hash).toString(36);
-                return baseId + '-' + Math.random().toString(36).substring(2, 8);
+                
+                // 生成64字符的十六进制ID
+                const hexString = Math.abs(hash).toString(16).padStart(16, '0');
+                return 'sec-' + hexString.repeat(4).substring(0, 64);
             }
 
-        
             // 更新设备信息
             async function updateDeviceInfo() {
                 try {
@@ -1435,7 +1330,7 @@
                     document.getElementById('platform').value = '未知';
                 }
             }
-        
+
             // 文件选择处理
             const fileInput = document.getElementById('encrypted-file');
             const fileNameDisplay = document.getElementById('file-name');
@@ -1452,7 +1347,7 @@
                     document.getElementById('authorized-devices').classList.add('hidden');
                 }
             });
-        
+
             // 拖放文件支持
             const fileInputLabel = document.querySelector('.file-input-label');
             
@@ -1478,7 +1373,7 @@
                     fileInput.dispatchEvent(event);
                 }
             });
-        
+
             // 解密功能
             decryptBtn.addEventListener('click', async () => {
                 const file = fileInput.files[0];
@@ -1549,7 +1444,7 @@
                     resultSection.classList.remove('hidden');
                 }
             });
-        
+
             // 安全解密函数 - 完整实现
             async function secureDecrypt(encryptedData, deviceId) {
                 const authorizedDevices = document.getElementById('authorized-devices');
@@ -1579,7 +1474,7 @@
                     
                     // 5. 解密第二层 (UUID层)
                     const deviceHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(deviceId));
-                    const deviceHashBytes = new Uint8Array(deviceHash);
+                    const deviceHashBytes = new U极8Array(deviceHash);
                     const layer2Key = deviceHashBytes.slice(0, 16);
                     const layer2Iv = deviceHashBytes.slice(16, 32);
                     
@@ -1600,16 +1495,16 @@
                         // 如果解析失败，尝试修复JSON格式
                         try {
                             const fixedText = rawLayer2Data
-                                .replace(/'/g, '"') // 替换单引号为双引号
-                                .replace(/,\s*}/g, '}') // 修复多余的逗号
-                                .replace(/,\s*]/g, ']') // 修复多余的逗号
-                                .replace(/\\"/g, '"') // 处理转义双引号
-                                .replace(/\\n/g, '') // 处理换行符
-                                .replace(/\\r/g, '') // 处理回车符
-                                .replace(/\\t/g, '') // 处理制表符
+                                .replace(/'/g, '"')
+                                .replace(/,\s*}/g, '}')
+                                .replace(/,\s*]/g, ']')
+                                .replace(/\\"/g, '"')
+                                .replace(/\\n/g, '')
+                                .replace(/\\r/g, '')
+                                .replace(/\\t/g, '')
                                 .replace(/\\u([\d\w]{4})/gi, (match, grp) => {
                                     return String.fromCharCode(parseInt(grp, 16));
-                                }); // 处理Unicode转义
+                                });
                             
                             layer2Data = JSON.parse(fixedText);
                         } catch (e2) {
@@ -1621,7 +1516,7 @@
                     // 7. 显示授权设备
                     authorizedDevices.textContent = translations['authorized-devices'];
                     layer2Data.authorized_uuids.forEach(uuid => {
-                        authorizedDevices.textContent += `\n- ${uuid.substring(0, 12)}...`;
+                        authorizedDevices.innerHTML += `<br>${uuid.substring(0, 16)}...`;
                     });
                     authorizedDevices.classList.remove('hidden');
                     
@@ -1656,23 +1551,19 @@
                     throw error;
                 }
             }
-        
+
             // 检测乱码文本
             function isGarbledText(text) {
-                // 检测文本中非打印字符的比例
                 let nonPrintableCount = 0;
                 for (let i = 0; i < text.length; i++) {
                     const charCode = text.charCodeAt(i);
-                    // 非打印字符: 控制字符 (0-31) 和删除字符 (127)
                     if (charCode < 32 || charCode === 127) {
                         nonPrintableCount++;
                     }
                 }
-                
-                // 如果非打印字符超过文本长度的30%，则认为是乱码
                 return (nonPrintableCount / text.length) > 0.3;
             }
-        
+
             // 加密功能
             document.getElementById('encrypt-btn').addEventListener('click', async () => {
                 const textInput = document.getElementById('text-input').value;
@@ -1700,17 +1591,17 @@
                         throw new Error(translations['error-device-id']);
                     }
                     
-                    // 解析授权UUID列表
+                    // 解析授权UUID列表（按换行符分隔）
                     let authorizedUuids = [];
                     if (authorizedUuidsInput) {
-                        authorizedUuids = authorizedUuidsInput.split(',')
+                        authorizedUuids = authorizedUuidsInput.split('\n')
                             .map(uuid => uuid.trim())
                             .filter(uuid => uuid.length > 0);
                     }
                     
                     // 默认包含当前设备
                     if (!authorizedUuids.includes(deviceId)) {
-                        authorizedUuids.push(deviceId);
+                        authorizedUuids.push(device极);
                     }
                     
                     // 2. 加密数据
@@ -1745,8 +1636,8 @@
                     updateEncryptProgress(0);
                 }
             });
-        
-            // 安全加密函数 - 修复文件格式问题
+
+            // 安全加密函数 - 完整实现
             async function secureEncrypt(text, deviceId, authorizedUuids) {
                 try {
                     const encoder = new TextEncoder();
@@ -1769,30 +1660,22 @@
                         key: arrayBufferToBase64(layer1Key),
                         iv: arrayBufferToBase64(layer1Iv),
                         authorized_uuids: authorizedUuids,
-                        signature: await generateSignature(authorizedUuids.join(','))
+                        signature: await generateSignature(authorizedUuids.join('\n'))
                     };
                     
                     // 6. 序列化JSON数据
                     let layer2Json;
                     try {
-                        // 使用JSON.stringify生成JSON
                         layer2Json = JSON.stringify(layer2Data, null, 2);
-                        
-                        // 验证JSON有效性
                         JSON.parse(layer2Json);
                     } catch (e) {
-                        // 如果JSON无效，尝试修复
                         try {
-                            // 使用更安全的方法生成JSON
                             layer2Json = JSON.stringify(layer2Data, (key, value) => {
                                 if (typeof value === 'string') {
-                                    // 移除控制字符和无效字符
                                     return value.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
                                 }
                                 return value;
                             });
-                            
-                            // 再次验证
                             JSON.parse(layer2Json);
                         } catch (e2) {
                             console.error('生成的JSON无效:', layer2Data);
@@ -1812,7 +1695,7 @@
                     // 9. 第二层加密
                     const layer2Encrypted = xorDecrypt(layer2Encoded, [...layer2Key, ...layer2Iv]);
                     
-                    // 10. 构建文件结构 - 修复文件格式
+                    // 10. 构建文件结构
                     const header = encoder.encode('DZ2');
                     const totalLength = 11 + layer2Encrypted.length + layer1Encrypted.length;
                     const encryptedData = new Uint8Array(totalLength);
@@ -1844,7 +1727,7 @@
                     throw error;
                 }
             }
-        
+
             // 异或加密函数
             function xorDecrypt(data, key) {
                 const result = new Uint8Array(data.length);
@@ -1853,7 +1736,7 @@
                 }
                 return result;
             }
-        
+
             // 生成签名
             async function generateSignature(data) {
                 const encoder = new TextEncoder();
@@ -1861,7 +1744,7 @@
                 const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
                 return arrayBufferToBase64(hashBuffer);
             }
-        
+
             // 下载加密文件
             document.getElementById('download-btn').addEventListener('click', () => {
                 if (!window.encryptedFileUrl) {
@@ -1886,7 +1769,7 @@
                 
                 showEncryptStatus(translations['download-btn'] + ' ' + translations['encrypt-status-success']);
             });
-        
+
             // 复制设备ID功能
             document.getElementById('copy-uuid-btn').addEventListener('click', () => {
                 const deviceId = document.getElementById('device-id').textContent;
@@ -1901,7 +1784,7 @@
                     showStatus(translations['copy-error'], true);
                 }
             });
-        
+
             // 复制设备ID功能 (加密页)
             document.getElementById('copy-uuid-btn-encrypt').addEventListener('click', () => {
                 const deviceId = document.getElementById('device-id-encrypt').textContent;
@@ -1916,7 +1799,7 @@
                     showEncryptStatus(translations['copy-error'], true);
                 }
             });
-        
+
             // 复制文本功能
             document.getElementById('copy-btn').addEventListener('click', () => {
                 const textDisplay = document.getElementById('text-display');
@@ -1932,7 +1815,7 @@
                     showStatus(translations['copy-error'], true);
                 }
             });
-        
+
             // 重置按钮
             document.getElementById('reset-btn').addEventListener('click', () => {
                 // 重置表单
@@ -1952,7 +1835,7 @@
                 // 重置状态
                 showStatus(translations['status-waiting']);
             });
-        
+
             // 重置加密按钮
             document.getElementById('reset-encrypt-btn').addEventListener('click', () => {
                 // 重置表单
@@ -1969,7 +1852,7 @@
                 // 重置状态
                 showEncryptStatus(translations['encrypt-status-waiting']);
             });
-        
+
             // IP地址工具
             document.getElementById('get-ip-btn').addEventListener('click', async () => {
                 const ipContainer = document.getElementById('ip-info-container');
@@ -2001,7 +1884,7 @@
                     document.getElementById('ip-status-text').textContent = translations['ip-status-error'] + error.message;
                 }
             });
-        
+
             // 网络诊断工具
             document.getElementById('network-test-btn').addEventListener('click', async () => {
                 const networkResults = document.getElementById('network-test-results');
@@ -2034,7 +1917,7 @@
                     document.getElementById('network-status-text').textContent = translations['network-status-error'] + error.message;
                 }
             });
-        
+
             // 测试下载速度
             async function testDownloadSpeed() {
                 const testUrl = 'https://speedtest.ftp.otenet.gr/files/test100k.db';
@@ -2051,7 +1934,7 @@
                 
                 return `${speed} KB/s`;
             }
-        
+
             // 测试上传速度
             async function testUploadSpeed() {
                 const testUrl = 'https://httpbin.org/post';
@@ -2070,7 +1953,7 @@
                 
                 return `${speed} KB/s`;
             }
-        
+
             // 格式转换功能
             const converterFileInput = document.getElementById('converter-file');
             const converterFileText = document.getElementById('converter-file-text');
@@ -2084,10 +1967,10 @@
             const converterResultText = document.getElementById('converter-result-text');
             const downloadConvertedBtn = document.getElementById('download-converted-btn');
             const resetConverterBtn = document.getElementById('reset-converter-btn');
-        
+
             let selectedFile = null;
             let convertedFile = null;
-        
+
             converterFileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
@@ -2098,7 +1981,7 @@
                     convertBtn.disabled = false;
                 }
             });
-        
+
             // 更新文件预览
             function updateFilePreview(file) {
                 filePreview.innerHTML = '';
@@ -2118,13 +2001,13 @@
                     filePreview.innerHTML = `<span>${file.name}</span>`;
                 }
             }
-        
+
             // 更新当前格式显示
             function updateCurrentFormat(file) {
                 const extension = file.name.split('.').pop().toLowerCase();
                 currentFormat.textContent = translations['current-format'] + extension.toUpperCase();
             }
-        
+
             // 转换按钮事件
             convertBtn.addEventListener('click', async () => {
                 const targetFormat = document.getElementById('target-format').value;
@@ -2170,7 +2053,7 @@
                     showConverterStatus(translations['converter-status-error'] + error.message, true);
                 }
             });
-        
+
             // 下载转换后的文件
             downloadConvertedBtn.addEventListener('click', () => {
                 if (!convertedFile) {
@@ -2189,7 +2072,7 @@
                 
                 showConverterStatus(translations['download-converted-btn'] + ' ' + translations['converter-status-success']);
             });
-        
+
             // 重置转换器
             resetConverterBtn.addEventListener('click', () => {
                 converterFileInput.value = '';
@@ -2203,7 +2086,7 @@
                 selectedFile = null;
                 convertedFile = null;
             });
-        
+
             // 根据格式获取MIME类型
             function getMimeType(format) {
                 switch(format) {
@@ -2215,7 +2098,7 @@
                     default: return 'application/octet-stream';
                 }
             }
-        
+
             // 显示转换状态
             function showConverterStatus(message, isError = false) {
                 converterStatusBox.classList.remove('hidden');
@@ -2227,7 +2110,7 @@
                     converterStatusBox.className = 'status-box converter';
                 }
             }
-        
+
             // 格式分类切换
             document.querySelectorAll('.format-item').forEach(item => {
                 item.addEventListener('click', () => {
@@ -2260,7 +2143,7 @@
                     }
                 });
             });
-        
+
             // 辅助函数
             function readFileAsArrayBuffer(file) {
                 return new Promise((resolve, reject) => {
@@ -2270,7 +2153,7 @@
                     reader.readAsArrayBuffer(file);
                 });
             }
-        
+
             function showStatus(message, isError = false) {
                 const statusBox = document.getElementById('status-box');
                 const statusText = document.getElementById('status-text');
@@ -2284,10 +2167,10 @@
                     statusBox.className = 'status-box';
                 }
             }
-        
+
             function showEncryptStatus(message, isError = false) {
                 const statusBox = document.getElementById('encrypt-status-box');
-                const statusText = document.getElementById('encrypt-status-text');
+                const statusText = document.getElementById极('encrypt-status-text');
                 
                 statusBox.classList.remove('hidden');
                 statusText.textContent = message;
@@ -2295,10 +2178,10 @@
                 if (isError) {
                     statusBox.className = 'status-box error';
                 } else {
-                    statusBox.className = 'status-box';
+                    status极Box.className = 'status-box';
                 }
             }
-        
+
             function updateProgress(percent) {
                 const progressBar = document.getElementById('progress-bar');
                 const progressText = document.getElementById('progress-text');
@@ -2306,7 +2189,7 @@
                 progressBar.style.width = percent + '%';
                 progressText.textContent = percent + '%';
             }
-        
+
             function updateEncryptProgress(percent) {
                 const progressBar = document.getElementById('encrypt-progress-bar');
                 const progressText = document.getElementById('encrypt-progress-text');
@@ -2314,7 +2197,15 @@
                 progressBar.style.width = percent + '%';
                 progressText.textContent = percent + '%';
             }
-        
+
+            function xorDecrypt(data, key) {
+                const result = new Uint8Array(data.length);
+                for (let i = 0; i < data.length; i++) {
+                    result[i] = data[i] ^ key[i % key.length];
+                }
+                return result;
+            }
+
             function arrayBufferToBase64(buffer) {
                 let binary = '';
                 const bytes = new Uint8Array(buffer);
@@ -2324,7 +2215,7 @@
                 }
                 return btoa(binary);
             }
-        
+
             function base64ToArrayBuffer(base64) {
                 const binaryString = atob(base64);
                 const len = binaryString.length;
@@ -2334,7 +2225,7 @@
                 }
                 return bytes;
             }
-        
+
             // 初始化应用
             document.addEventListener('DOMContentLoaded', () => {
                 updateTexts();
@@ -2372,4 +2263,3 @@
             <p id="footer-text">安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版</p>
         </footer>
     </div>
-    
