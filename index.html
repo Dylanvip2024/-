@@ -1247,40 +1247,40 @@
                 });
             });
         
-            // 获取设备ID - 修复UUID生成机制
+            // 修改设备ID生成函数，增加移动设备兼容性
             async function getDeviceId() {
                 try {
-                           // 尝试从本地存储获取设备ID
+                    // 尝试从本地存储获取设备ID
                     const storedDeviceId = localStorage.getItem('secure_device_id');
                     if (storedDeviceId) {
-                    return storedDeviceId;
+                        return storedDeviceId;
                     }
-        
-        // 收集设备特征 - 增强移动设备支持
+
+                    // 收集设备特征 - 增强移动设备支持
                     const features = await collectDeviceFeatures();
-        
-        // 生成特征字符串 - 确保包含足够的信息
+
+                    // 生成特征字符串 - 确保包含足够的信息
                     const featureString = JSON.stringify(features) + 
-                                    Math.random().toString(36).substring(2, 15) + 
-                                    new Date().getTime();
-        
-        // 使用SHA-256生成哈希
+                                        Math.random().toString(36).substring(2, 15) + 
+                                        new Date().getTime();
+
+                    // 使用SHA-256生成哈希
                     const encoder = new TextEncoder();
                     const data = encoder.encode(featureString);
-        
-        // 使用更可靠的哈希方法
+
+                    // 使用更可靠的哈希方法
                     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
                     const hashArray = Array.from(new Uint8Array(hashBuffer));
-        
-        // 将哈希转换为16进制字符串
+
+                    // 将哈希转换为16进制字符串
                     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        // 确保ID长度足够（至少32字符）
+
+                    // 确保ID长度足够（至少32字符）
                     const deviceId = 'sec-' + hashHex.substring(0, 32);
-        
-        // 存储设备ID
+
+                    // 存储设备ID
                     localStorage.setItem('secure_device_id', deviceId);
-        
+
                     return deviceId;
                 } catch (e) {
                     console.error('获取设备ID错误:', e);
@@ -1288,38 +1288,49 @@
                 }
             }
 
-// 收集设备特征 - 增强移动设备支持
+            // 增强移动设备特征收集
             async function collectDeviceFeatures() {
                 const features = {};
     
-    // 基本设备信息
+                // 基本设备信息
                 features.userAgent = navigator.userAgent;
                 features.platform = navigator.platform;
-                features.languages = navigator.languages.join(',');
+                features.languages = navigator.languages ? navigator.languages.join(',') : 'unknown';
                 features.screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
                 features.hardwareConcurrency = navigator.hardwareConcurrency || 'unknown';
                 features.deviceMemory = navigator.deviceMemory || 'unknown';
-                features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+                try {
+                    features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                } catch (e) {
+                    features.timezone = 'unknown';
+                }
+    
                 features.maxTouchPoints = navigator.maxTouchPoints || 0;
                 features.devicePixelRatio = window.devicePixelRatio || 1;
+
+                // 添加更多移动设备特征
+                try {
+        features.orientation = screen.orientation ? screen.orientation.type : 'unknown';
+                } catch (e) {
+        features.orientation = 'unknown';
+                }
     
-    // 添加更多移动设备特征
-                features.orientation = screen.orientation ? screen.orientation.type : 'unknown';
                 features.vendor = navigator.vendor || 'unknown';
                 features.product = navigator.product || 'unknown';
                 features.appVersion = navigator.appVersion || 'unknown';
-    
-    // 添加性能信息
+
+                // 添加性能信息
                 if (window.performance && window.performance.memory) {
                     features.jsHeapSizeLimit = window.performance.memory.jsHeapSizeLimit || 'unknown';
                     features.totalJSHeapSize = window.performance.memory.totalJSHeapSize || 'unknown';
                     features.usedJSHeapSize = window.performance.memory.usedJSHeapSize || 'unknown';
                 }
-    
-    // 添加时间戳
-                    features.timestamp = new Date().getTime();
-    
-    // WebGL特征 - 移动设备可能不支持
+
+                // 添加时间戳
+                features.timestamp = new Date().getTime();
+
+                // WebGL特征 - 移动设备可能不支持
                 try {
                     const canvas = document.createElement('canvas');
                     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -1328,65 +1339,35 @@
                         if (debugInfo) {
                             features.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
                             features.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                        }
+                    }
                     }
                 } catch (e) {
-                    console.warn('无法获取WebGL信息');
                     features.webglError = 'WebGL not supported';
                 }
-    
-    // 媒体特征 - 移动设备可能不支持
+
+                // 媒体特征 - 移动设备可能不支持
                 try {
                     if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
                         const devices = await navigator.mediaDevices.enumerateDevices();
                         features.mediaDevices = devices.map(d => `${d.kind}:${d.groupId}`).join(';');
                     }
                 } catch (e) {
-                    console.warn('无法获取媒体设备信息');
                     features.mediaError = 'Media devices not accessible';
                 }
-    
-    // 网络特征 - 移动设备可能不支持
+
+                // 网络特征 - 移动设备可能不支持
                 try {
                     if (navigator.connection) {
                         const conn = navigator.connection;
-                        features.connectionType = conn.type;
-                        features.effectiveType = conn.effectiveType;
-                        features.downlink = conn.downlink;
-                        features.rtt = conn.rtt;
-                    }
+                    features.connectionType = conn.type || 'unknown';
+                    features.effectiveType = conn.effectiveType || 'unknown';
+                    features.downlink = conn.downlink || 'unknown';
+                    features.rtt = conn.rtt || 'unknown';
+                }
                 } catch (e) {
-                    console.warn('无法获取网络信息');
                     features.networkError = 'Network info not accessible';
                 }
-    
-                // 字体特征 - 移动设备可能不支持
-                try {
-                    const fontList = [];
-                    const testString = "mmMwWLliI0O&1";
-                    const testSize = '72px';
-                    const fonts = [
-                        'Arial', 'Arial Black', 'Arial Narrow', 'Arial Rounded MT Bold',
-                        'Courier New', 'Georgia', 'Times New Roman', 'Trebuchet MS',
-                        'Verdana', 'Comic Sans MS', 'Impact', 'Lucida Console',
-                        'Palatino Linotype', 'Tahoma', 'Garamond', 'Bookman'
-                    ];
-        
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-        
-                    for (const font of fonts) {
-                        context.font = `${testSize} "${font}"`;
-                        const width = context.measureText(testString).width;
-                        fontList.push(`${font}:${width}`);
-                    }
-        
-                    features.fonts = fontList.join(';');
-                } catch (e) {
-                    console.warn('无法获取字体信息');
-                    features.fontError = 'Font info not accessible';
-                }
-    
+
                 return features;
             }
 
