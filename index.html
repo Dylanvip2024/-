@@ -1012,7 +1012,7 @@
                             <ol>
                                 <li>切换到"加密文本"标签页</li>
                                 <li>在文本框中输入要加密的内容</li>
-                                <极>设置输出文件名（默认为secret_file.dzj2）</li>
+                                <li>设置输出文件名（默认为secret_file.dzj2）</li>
                                 <li>添加授权设备ID（多个ID用逗号分隔）</li>
                                 <li>点击"开始加密"按钮</li>
                                 <li>加密完成后点击"下载加密文件"</li>
@@ -1065,7 +1065,7 @@
                             <p>可能的原因包括：</p>
                             <ul>
                                 <li>当前设备不在授权设备列表中</li>
-                                <li>文件在传输过程中损坏</极>
+                                <li>文件在传输过程中损坏</li>
                                 <li>文件格式不正确（必须是.dzj2格式）</li>
                                 <li>设备ID发生变化（清除浏览器缓存可能导致ID变化）</li>
                             </ul>
@@ -1744,9 +1744,9 @@
                 // 2. 压缩数据
                 const compressedData = pako.deflate(textData);
                 
-                // 极. 生成第一层加密密钥和IV
+                // 3. 生成第一层加密密钥和IV
                 const layer1Key = crypto.getRandomValues(new Uint8Array(16));
-                const layer1Iv = crypto.getRandomValues(new Uint极Array(16));
+                const layer1Iv = crypto.getRandomValues(new Uint8Array(16));
                 
                 // 4. 第一层加密
                 const layer1Encrypted = xorDecrypt(compressedData, [...layer1Key, ...layer1Iv]);
@@ -1793,7 +1793,7 @@
                 // 8. 生成第二层加密密钥
                 const deviceHash = await crypto.subtle.digest('SHA-256', encoder.encode(deviceId));
                 const deviceHashBytes = new Uint8Array(deviceHash);
-                const layer2Key极 = deviceHashBytes.slice(0, 16);
+                const layer2Key = deviceHashBytes.slice(0, 16);
                 const layer2Iv = deviceHashBytes.slice(16, 32);
                 
                 // 9. 第二层加密
@@ -2366,7 +2366,6 @@
             });
         });
     </script>
-  
         <footer>
             <p id="footer-text">安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版</p>
         </footer>
