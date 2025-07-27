@@ -667,6 +667,60 @@
             background: #f8f9fa;
         }
         
+        .about-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+        }
+        
+        .about-section h3 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 22px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2980b9;
+        }
+        
+        .about-content {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+        
+        .about-content h4 {
+            color: #2980b9;
+            margin: 15px 0 10px;
+        }
+        
+        .about-content ul {
+            padding-left: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .about-content li {
+            margin-bottom: 8px;
+        }
+        
+        .last-updated {
+            text-align: right;
+            font-style: italic;
+            color: #5f6368;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px dashed #dadce0;
+        }
+        
+        .hidden-thanks {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            color: rgba(0, 0, 0, 0.01); /* 透明文字 */
+            font-size: 14px;
+            font-style: italic;
+            pointer-events: none; /* 防止干扰 */
+        }
+
         @media (max-width: 768px) {
             .converter-form {
                 grid-template-columns: 1fr;
@@ -732,6 +786,7 @@
             <div class="tab tool" data-tab="tools">🛠️ 工具</div>
             <div class="tab converter" data-tab="converter">🔄 格式转换</div>
             <div class="tab help" data-tab="help">❓ 帮助</div>
+            <div class="tab about" data-tab="about">📜 关于本站</div>
         </div>
         
         <div class="main-content">
@@ -1140,6 +1195,113 @@
                     </div>
                 </div>
             </div>
+                <!-- 关于本站标签页内容 -->
+            <div id="about-tab" class="tab-content hidden">
+                <div class="card">
+                    <h2 class="card-title">📜 服务条款</h2>
+                    <div class="about-content">
+                        <div class="about-section">
+                            <h3>1. 接受条款</h3>
+                            <p>欢迎使用本工具箱网站（以下简称"本网站"）。通过访问或使用本网站，您同意遵守以下服务条款（以下简称"条款"）。如果您不同意这些条款，请立即停止使用本网站。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>2. 服务描述</h3>
+                            <p>本网站提供各种在线工具（以下简称"服务"），包括但不限于文件加密解密、格式转换、网络诊断等功能。这些服务仅用于合法目的，不得用于任何非法活动。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>3. 合法使用承诺</h3>
+                            <p>您同意仅将本网站及其服务用于合法目的，并承诺：</p>
+                            <ul>
+                                <li>不进行任何非法活动或侵犯他人权利的行为</li>
+                                <li>不传播恶意软件、病毒或进行黑客攻击</li>
+                                <li>不侵犯任何知识产权</li>
+                                <li>不进行欺诈活动或传播虚假信息</li>
+                                <li>不侵犯他人隐私</li>
+                                <li>不违反任何适用的法律或法规</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>4. 禁止用途</h3>
+                            <p>严格禁止使用本网站进行以下活动：</p>
+                            <ul>
+                                <li>破解密码或未经授权访问系统</li>
+                                <li>窃取或泄露敏感信息</li>
+                                <li>传播非法内容</li>
+                                <li>进行网络攻击或分布式拒绝服务(DDoS)攻击</li>
+                                <li>任何违反出口管制法律的行为</li>
+                                <li>任何可能损害本网站或其他用户的行为</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>5. 用户责任</h3>
+                            <p>您应对使用本网站及其服务的行为负全部责任。您必须确保：</p>
+                            <ul>
+                                <li>您提供的信息（如有）是准确和合法的</li>
+                                <li>您不会干扰或破坏本网站的安全性或正常运行</li>
+                                <li>您不会尝试规避任何安全措施</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>6. 知识产权</h3>
+                            <p>本网站的所有内容（包括但不限于文本、图形、徽标、按钮图标、图像、音频剪辑、数字下载、数据编译和软件）均为本网站所有者或其内容提供者的财产，并受国际版权法保护。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>7. 免责声明</h3>
+                            <p>本网站及其服务按"原样"提供，不作任何明示或暗示的保证。我们不保证：</p>
+                            <ul>
+                                <li>服务将满足您的要求</li>
+                                <li>服务不会中断、及时、安全或无错误</li>
+                                <li>通过服务获得的任何结果将是准确或可靠的</li>
+                            </ul>
+                            <p>您使用本网站及其服务所产生的风险由您自行承担。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>8. 责任限制</h3>
+                            <p>在任何情况下，本网站所有者及其关联方均不对因使用或无法使用本网站及其服务而导致的任何直接、间接、附带、特殊、后果性或惩罚性损害赔偿承担责任，包括但不限于利润损失、数据丢失或业务中断。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>9. 赔偿</h3>
+                            <p>您同意赔偿并保护本网站所有者及其关联方免受因您违反这些条款或您使用本网站及其服务而引起的任何索赔、损失、责任、损害、成本或费用（包括合理的律师费）。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>10. 修改条款</h3>
+                            <p>我们保留随时修改这些条款的权利。修改后的条款将在本网站上公布后立即生效。您继续使用本网站即表示您接受修改后的条款。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>11. 终止</h3>
+                            <p>我们保留在不事先通知的情况下，随时终止或暂停您访问本网站及其服务的权利，无论出于何种原因，包括但不限于违反这些条款。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>12. 适用法律</h3>
+                            <p>这些条款应受中华人民共和国法律管辖并据其解释，不考虑其法律冲突原则。</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>13. 联系我们</h3>
+                            <p>如果您对这些条款有任何疑问，请通过以下方式联系我们：dylanwyyx214@126.com</p>
+                        </div>
+                        
+                        <div class="last-updated">
+                            <p><strong>最后更新日期：</strong>2025.7.27</p>
+                            <p><strong>生效日期：</strong>2025.7.27</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 透明感谢文字 -->
+            <div class="hidden-thanks">   谢谢你01k，你为我提供了灵感去制作这个网站</div>
         </div>
 
         <script>
@@ -1161,7 +1323,7 @@
             'result-success': '文本已成功解密!',
             'copy-btn': '复制文本',
             'reset-btn': '处理新文件',
-            'footer-text': '安全文件加密解密系统 v2.8 | DZJ2 加密解决方案',
+            'footer-text': '安全文件加密解密系统 v3.0 | DZJ2 加密解决方案 | 增强版',
             'error-invalid-file': '无效的DZJ2文件格式',
             'error-device-id': '无法获取设备ID',
             'error-unauthorized': '当前设备未授权访问此文件',
@@ -1179,7 +1341,7 @@
             'authorized-error': '无法验证授权状态',
             'text-input-label': '输入要加密的文本',
             'file-name-label': '输出文件名',
-            'authorized-devices-label': '授权设备ID列表 (用逗号分隔)',
+            'authorized-devices-label': '授权设备ID列表 (每行一个ID)',
             'encrypt-btn': '开始加密',
             'encrypt-status-waiting': '等待操作...',
             'encrypt-status-processing': '正在加密数据...',
@@ -1207,7 +1369,9 @@
             'error-no-file': '请先选择文件',
             'error-unsupported-format': '不支持的文件格式',
             'error-conversion': '转换过程中发生错误',
-            'current-format': '当前格式: '
+            'current-format': '当前格式: ',
+            'about-title': '📜 关于本站',
+            'terms-title': '服务条款'
         };
 
         // 存储设备ID
@@ -1224,6 +1388,8 @@
             document.getElementById('converter-status-text').textContent = translations['converter-status-waiting'];
             document.getElementById('converter-file-text').textContent = translations['converter-file-text'];
             document.getElementById('current-format').textContent = translations['current-format'] + '未选择文件';
+            document.getElementById('about-title').textContent = translations['about-title'];
+            document.getElementById('terms-title').textContent = translations['terms-title'];
         }
 
         // 标签切换功能
@@ -1247,7 +1413,7 @@
             });
         });
 
-        // 修改设备ID生成函数，增加移动设备兼容性
+        // 获取设备ID - 修复UUID生成机制
         async function getDeviceId() {
             try {
                 // 尝试从本地存储获取设备ID
@@ -1255,32 +1421,30 @@
                 if (storedDeviceId) {
                     return storedDeviceId;
                 }
-
-                // 收集设备特征 - 增强移动设备支持
-                const features = await collectDeviceFeatures();
-
-                // 生成特征字符串 - 确保包含足够的信息
-                const featureString = JSON.stringify(features) + 
-                                    Math.random().toString(36).substring(2, 15) + 
-                                    new Date().getTime();
-
-                // 使用SHA-256生成哈希
+                
+                // 使用更稳定的特征集合
+                const deviceFeatures = [
+                    navigator.userAgent,
+                    navigator.platform,
+                    screen.width,
+                    screen.height,
+                    navigator.languages[0],
+                    navigator.hardwareConcurrency,
+                    navigator.deviceMemory,
+                    new Date().getTime()
+                ].join('|');
+                
+                // 使用SHA-256生成64字符的十六进制ID
                 const encoder = new TextEncoder();
-                const data = encoder.encode(featureString);
-
-                // 使用更可靠的哈希方法
+                const data = encoder.encode(deviceFeatures);
                 const hashBuffer = await crypto.subtle.digest('SHA-256', data);
                 const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-                // 将哈希转换为16进制字符串
                 const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-                // 确保ID长度足够（至少32字符）
-                const deviceId = 'sec-' + hashHex.substring(0, 32);
-
+                const deviceId = 'sec-' + hashHex;
+                
                 // 存储设备ID
                 localStorage.setItem('secure_device_id', deviceId);
-
+                
                 return deviceId;
             } catch (e) {
                 console.error('获取设备ID错误:', e);
@@ -1288,92 +1452,9 @@
             }
         }
 
-        // 增强移动设备特征收集
-        async function collectDeviceFeatures() {
-            const features = {};
-
-            // 基本设备信息
-            features.userAgent = navigator.userAgent;
-            features.platform = navigator.platform;
-            features.languages = navigator.languages ? navigator.languages.join(',') : 'unknown';
-            features.screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
-            features.hardwareConcurrency = navigator.hardwareConcurrency || 'unknown';
-            features.deviceMemory = navigator.deviceMemory || 'unknown';
-
-            try {
-                features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            } catch (e) {
-                features.timezone = 'unknown';
-            }
-
-            features.maxTouchPoints = navigator.maxTouchPoints || 0;
-            features.devicePixelRatio = window.devicePixelRatio || 1;
-
-            // 添加更多移动设备特征
-            try {
-                features.orientation = screen.orientation ? screen.orientation.type : 'unknown';
-            } catch (e) {
-                features.orientation = 'unknown';
-            }
-
-            features.vendor = navigator.vendor || 'unknown';
-            features.product = navigator.product || 'unknown';
-            features.appVersion = navigator.appVersion || 'unknown';
-
-            // 添加性能信息
-            if (window.performance && window.performance.memory) {
-                features.jsHeapSizeLimit = window.performance.memory.jsHeapSizeLimit || 'unknown';
-                features.totalJSHeapSize = window.performance.memory.totalJSHeapSize || 'unknown';
-                features.usedJSHeapSize = window.performance.memory.usedJSHeapSize || 'unknown';
-            }
-
-            // 添加时间戳
-            features.timestamp = new Date().getTime();
-
-            // WebGL特征 - 移动设备可能不支持
-            try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-                if (gl) {
-                    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                    if (debugInfo) {
-                        features.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-                        features.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-                    }
-                }
-            } catch (e) {
-                features.webglError = 'WebGL not supported';
-            }
-
-            // 媒体特征 - 移动设备可能不支持
-            try {
-                if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    features.mediaDevices = devices.map(d => `${d.kind}:${d.groupId}`).join(';');
-                }
-            } catch (e) {
-                features.mediaError = 'Media devices not accessible';
-            }
-
-            // 网络特征 - 移动设备可能不支持
-            try {
-                if (navigator.connection) {
-                    const conn = navigator.connection;
-                    features.connectionType = conn.type || 'unknown';
-                    features.effectiveType = conn.effectiveType || 'unknown';
-                    features.downlink = conn.downlink || 'unknown';
-                    features.rtt = conn.rtt || 'unknown';
-                }
-            } catch (e) {
-                features.networkError = 'Network info not accessible';
-            }
-
-            return features;
-        }
-
-        // 备用设备ID生成方法 - 增强移动设备支持
+        // 备用设备ID生成方法（确保64字符长度）
         function generateFallbackId() {
-            // 使用更可靠的方法生成ID
+            // 使用更简单的方法生成ID
             const fallbackInfo = [
                 navigator.userAgent,
                 navigator.platform,
@@ -1383,27 +1464,22 @@
                 new Date().getTime(),
                 Math.random().toString(36).substring(2, 15)
             ].join('|');
-
+            
             let hash = 0;
             for (let i = 0; i < fallbackInfo.length; i++) {
                 const char = fallbackInfo.charCodeAt(i);
                 hash = (hash << 5) - hash + char;
                 hash = hash & hash; // 转换为32位整数
             }
-
-            // 确保ID长度足够（至少16字符）
-            const baseId = 'sec-' + Math.abs(hash).toString(36);
-            return baseId + '-' + Math.random().toString(36).substring(2, 8);
+            
+            // 生成64字符的十六进制ID
+            const hexString = Math.abs(hash).toString(16).padStart(16, '0');
+            return 'sec-' + hexString.repeat(4).substring(0, 64);
         }
 
         // 更新设备信息
         async function updateDeviceInfo() {
             try {
-                // 显示加载状态
-                document.getElementById('device-id').textContent = '正在获取设备ID...';
-                document.getElementById('device-id-encrypt').textContent = '正在获取设备ID...';
-                
-                // 获取设备ID
                 deviceId = await getDeviceId();
                 const platform = navigator.platform;
                 
@@ -1425,7 +1501,7 @@
         const fileInput = document.getElementById('encrypted-file');
         const fileNameDisplay = document.getElementById('file-name');
         const decryptBtn = document.getElementById('decrypt-btn');
-
+        
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -1440,18 +1516,18 @@
 
         // 拖放文件支持
         const fileInputLabel = document.querySelector('.file-input-label');
-
+        
         fileInputLabel.addEventListener('dragover', (e) => {
             e.preventDefault();
             fileInputLabel.style.background = '#e8f0fe';
             fileInputLabel.style.borderColor = '#4285f4';
         });
-
-        fileInputLabel.addEventListener('dragleave', () => {
+        
+        file极InputLabel.addEventListener('dragleave', () => {
             fileInputLabel.style.background = '';
             fileInputLabel.style.borderColor = '';
         });
-
+        
         fileInputLabel.addEventListener('drop', (e) => {
             e.preventDefault();
             fileInputLabel.style.background = '';
@@ -1467,7 +1543,7 @@
         // 解密功能
         decryptBtn.addEventListener('click', async () => {
             const file = fileInput.files[0];
-
+            
             if (!file) {
                 showStatus(translations['error-no-file'], true);
                 return;
@@ -1478,6 +1554,7 @@
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
             progressContainer.classList.remove('hidden');
+            
             try {
                 // 1. 读取文件
                 showStatus(translations['status-reading']);
@@ -1491,10 +1568,7 @@
                 updateProgress(50);
                 
                 // 使用全局存储的deviceId
-                const deviceIdElement = document.getElementById('device-id');
-                const currentDeviceId = deviceIdElement.textContent;
-
-                if (!currentDeviceId || currentDeviceId.includes('...')) {
+                if (!deviceId) {
                     throw new Error(translations['error-device-id']);
                 }
                 
@@ -1587,16 +1661,16 @@
                     // 如果解析失败，尝试修复JSON格式
                     try {
                         const fixedText = rawLayer2Data
-                            .replace(/'/g, '"') // 替换单引号为双引号
-                            .replace(/,\s*}/g, '}') // 修复多余的逗号
-                            .replace(/,\s*]/g, ']') // 修复多余的逗号
-                            .replace(/\\"/g, '"') // 处理转义双引号
-                            .replace(/\\n/g, '') // 处理换行符
-                            .replace(/\\r/g, '') // 处理回车符
-                            .replace(/\\t/g, '') // 处理制表符
+                            .replace(/'/g, '"')
+                            .replace(/,\s*}/g, '}')
+                            .replace(/,\s*]/g, ']')
+                            .replace(/\\"/g, '"')
+                            .replace(/\\n/g, '')
+                            .replace(/\\r/g, '')
+                            .replace(/\\t/g, '')
                             .replace(/\\u([\d\w]{4})/gi, (match, grp) => {
                                 return String.fromCharCode(parseInt(grp, 16));
-                            }); // 处理Unicode转义
+                            });
                         
                         layer2Data = JSON.parse(fixedText);
                     } catch (e2) {
@@ -1608,7 +1682,7 @@
                 // 7. 显示授权设备
                 authorizedDevices.textContent = translations['authorized-devices'];
                 layer2Data.authorized_uuids.forEach(uuid => {
-                    authorizedDevices.textContent += `\n- ${uuid.substring(0, 12)}...`;
+                    authorizedDevices.innerHTML += `<br>${uuid.substring(0, 16)}...`;
                 });
                 authorizedDevices.classList.remove('hidden');
                 
@@ -1646,17 +1720,13 @@
 
         // 检测乱码文本
         function isGarbledText(text) {
-            // 检测文本中非打印字符的比例
             let nonPrintableCount = 0;
             for (let i = 0; i < text.length; i++) {
                 const charCode = text.charCodeAt(i);
-                // 非打印字符: 控制字符 (0-31) 和删除字符 (127)
                 if (charCode < 32 || charCode === 127) {
                     nonPrintableCount++;
                 }
             }
-            
-            // 如果非打印字符超过文本长度的30%，则认为是乱码
             return (nonPrintableCount / text.length) > 0.3;
         }
 
@@ -1684,13 +1754,13 @@
                 
                 // 使用全局存储的deviceId
                 if (!deviceId) {
-                    throw new Error(translations['error-device-id']);
+                    throw new Error(translations['error-dev极ice-id']);
                 }
                 
-                // 解析授权UUID列表
+                // 解析授权UUID列表（按换行符分隔）
                 let authorizedUuids = [];
                 if (authorizedUuidsInput) {
-                    authorizedUuids = authorizedUuidsInput.split(',')
+                    authorizedUuids = authorizedUuidsInput.split('\n')
                         .map(uuid => uuid.trim())
                         .filter(uuid => uuid.length > 0);
                 }
@@ -1710,7 +1780,7 @@
                 const url = URL.createObjectURL(blob);
                 
                 // 保存下载链接
-                window.encryptedFileUrl = url;
+                window.encryptedFileUrl极 = url;
                 window.encryptedFileName = outputFilename;
                 
                 updateEncryptProgress(100);
@@ -1733,7 +1803,7 @@
             }
         });
 
-        // 安全加密函数 - 修复文件格式问题
+        // 安全加密函数 - 完整实现
         async function secureEncrypt(text, deviceId, authorizedUuids) {
             try {
                 const encoder = new TextEncoder();
@@ -1756,30 +1826,22 @@
                     key: arrayBufferToBase64(layer1Key),
                     iv: arrayBufferToBase64(layer1Iv),
                     authorized_uuids: authorizedUuids,
-                    signature: await generateSignature(authorizedUuids.join(','))
+                    signature: await generateSignature(authorizedUuids.join('\n'))
                 };
                 
                 // 6. 序列化JSON数据
                 let layer2Json;
                 try {
-                    // 使用JSON.stringify生成JSON
                     layer2Json = JSON.stringify(layer2Data, null, 2);
-                    
-                    // 验证JSON有效性
                     JSON.parse(layer2Json);
                 } catch (e) {
-                    // 如果JSON无效，尝试修复
                     try {
-                        // 使用更安全的方法生成JSON
                         layer2Json = JSON.stringify(layer2Data, (key, value) => {
                             if (typeof value === 'string') {
-                                // 移除控制字符和无效字符
                                 return value.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
                             }
                             return value;
                         });
-                        
-                        // 再次验证
                         JSON.parse(layer2Json);
                     } catch (e2) {
                         console.error('生成的JSON无效:', layer2Data);
@@ -1799,7 +1861,7 @@
                 // 9. 第二层加密
                 const layer2Encrypted = xorDecrypt(layer2Encoded, [...layer2Key, ...layer2Iv]);
                 
-                // 10. 构建文件结构 - 修复文件格式
+                // 10. 构建文件结构
                 const header = encoder.encode('DZ2');
                 const totalLength = 11 + layer2Encrypted.length + layer1Encrypted.length;
                 const encryptedData = new Uint8Array(totalLength);
@@ -2302,6 +2364,14 @@
             progressText.textContent = percent + '%';
         }
 
+        function xorDecrypt(data, key) {
+            const result = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                result[i] = data[i] ^ key[i % key.length];
+            }
+            return result;
+        }
+
         function arrayBufferToBase64(buffer) {
             let binary = '';
             const bytes = new Uint8Array(buffer);
@@ -2325,19 +2395,7 @@
         // 初始化应用
         document.addEventListener('DOMContentLoaded', () => {
             updateTexts();
-            
-            // 添加错误处理
-            try {
-                updateDeviceInfo().catch(e => {
-                    console.error('初始化设备信息失败:', e);
-                    document.getElementById('device-id').textContent = translations['error-device-id'];
-                    document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
-                });
-            } catch (e) {
-                console.error('初始化错误:', e);
-                document.getElementById('device-id').textContent = translations['error-device-id'];
-                document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
-            }
+            updateDeviceInfo();
             
             // 添加拖放功能
             const converterFileLabel = document.querySelector('.file-input-label');
@@ -2364,6 +2422,12 @@
                     converterFileInput.dispatchEvent(event);
                 }
             });
+            
+            // 添加透明感谢文字
+            const hiddenThanks = document.createElement('div');
+            hiddenThanks.className = 'hidden-thanks';
+            hiddenThanks.textContent = '谢谢你01k，你为我提供了灵感去制作这个网站';
+            document.body.appendChild(hiddenThanks);
         });
     </script>
         <footer>
