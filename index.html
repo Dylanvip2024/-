@@ -1247,7 +1247,7 @@
             });
         });
 
-        // 获取设备ID - 修复UUID生成机制
+        // 修改设备ID生成函数，增加移动设备兼容性
         async function getDeviceId() {
             try {
                 // 尝试从本地存储获取设备ID
@@ -1288,10 +1288,10 @@
             }
         }
 
-        // 收集设备特征 - 增强移动设备支持
+        // 增强移动设备特征收集
         async function collectDeviceFeatures() {
             const features = {};
-            
+
             // 基本设备信息
             features.userAgent = navigator.userAgent;
             features.platform = navigator.platform;
@@ -1299,13 +1299,13 @@
             features.screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
             features.hardwareConcurrency = navigator.hardwareConcurrency || 'unknown';
             features.deviceMemory = navigator.deviceMemory || 'unknown';
-            
+
             try {
                 features.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             } catch (e) {
                 features.timezone = 'unknown';
             }
-            
+
             features.maxTouchPoints = navigator.maxTouchPoints || 0;
             features.devicePixelRatio = window.devicePixelRatio || 1;
 
@@ -1315,7 +1315,7 @@
             } catch (e) {
                 features.orientation = 'unknown';
             }
-            
+
             features.vendor = navigator.vendor || 'unknown';
             features.product = navigator.product || 'unknown';
             features.appVersion = navigator.appVersion || 'unknown';
@@ -1399,6 +1399,11 @@
         // 更新设备信息
         async function updateDeviceInfo() {
             try {
+                // 显示加载状态
+                document.getElementById('device-id').textContent = '正在获取设备ID...';
+                document.getElementById('device-id-encrypt').textContent = '正在获取设备ID...';
+                
+                // 获取设备ID
                 deviceId = await getDeviceId();
                 const platform = navigator.platform;
                 
@@ -1420,7 +1425,7 @@
         const fileInput = document.getElementById('encrypted-file');
         const fileNameDisplay = document.getElementById('file-name');
         const decryptBtn = document.getElementById('decrypt-btn');
-        
+
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -1435,18 +1440,18 @@
 
         // 拖放文件支持
         const fileInputLabel = document.querySelector('.file-input-label');
-        
+
         fileInputLabel.addEventListener('dragover', (e) => {
             e.preventDefault();
             fileInputLabel.style.background = '#e8f0fe';
-            file极Label.style.borderColor = '#4285f4';
+            fileInputLabel.style.borderColor = '#4285f4';
         });
-        
+
         fileInputLabel.addEventListener('dragleave', () => {
             fileInputLabel.style.background = '';
             fileInputLabel.style.borderColor = '';
         });
-        
+
         fileInputLabel.addEventListener('drop', (e) => {
             e.preventDefault();
             fileInputLabel.style.background = '';
@@ -1462,7 +1467,7 @@
         // 解密功能
         decryptBtn.addEventListener('click', async () => {
             const file = fileInput.files[0];
-            
+
             if (!file) {
                 showStatus(translations['error-no-file'], true);
                 return;
@@ -1473,7 +1478,6 @@
             const progressBar = document.getElementById('progress-bar');
             const progressText = document.getElementById('progress-text');
             progressContainer.classList.remove('hidden');
-            
             try {
                 // 1. 读取文件
                 showStatus(translations['status-reading']);
@@ -1486,15 +1490,15 @@
                 showStatus(translations['status-decrypting']);
                 updateProgress(50);
                 
-                // 直接从页面显示元素获取设备ID
+                // 使用全局存储的deviceId
                 const deviceIdElement = document.getElementById('device-id');
                 const currentDeviceId = deviceIdElement.textContent;
-                
+
                 if (!currentDeviceId || currentDeviceId.includes('...')) {
                     throw new Error(translations['error-device-id']);
                 }
                 
-                const decryptedData = await secureDecrypt(fileData, currentDeviceId);
+                const decryptedData = await secureDecrypt(fileData, deviceId);
                 updateProgress(80);
                 
                 // 3. 显示文本内容
@@ -1545,10 +1549,10 @@
                     throw new Error(translations['error-invalid-file'] + ` (实际文件头: ${actualHeader})`);
                 }
                 
-                // 2. 解析数据长度 - 使用小端序以适应移动设备
+                // 2. 解析数据长度
                 const dataView = new DataView(encryptedData);
-                const layer2Length = dataView.getUint32(3, true); // 改为小端序
-                const layer1Length = dataView.getUint32(7, true); // 改为小端序
+                const layer2Length = dataView.getUint32(3, false); // 从第4字节开始
+                const layer1Length = dataView.getUint32(7, false); // 从第8字节开始
                 
                 // 3. 检查文件总长度
                 const totalHeaderLength = 11; // 3字节文件头 + 4字节第二层长度 + 4字节第一层长度
@@ -1658,13 +1662,6 @@
 
         // 加密功能
         document.getElementById('encrypt-btn').addEventListener('click', async () => {
-            // 清除旧的加密文件URL
-            if (window.encryptedFileUrl) {
-                URL.revokeObjectURL(window.encryptedFileUrl);
-                window.encryptedFileUrl = null;
-            }
-            
-            // 每次点击都重新获取最新的输入值
             const textInput = document.getElementById('text-input').value;
             const outputFilename = document.getElementById('output-filename').value || 'encrypted_file.dzj2';
             const authorizedUuidsInput = document.getElementById('authorized-uuids').value;
@@ -1690,7 +1687,7 @@
                     throw new Error(translations['error-device-id']);
                 }
                 
-                // 解析授权UUID列表 - 每次重新解析
+                // 解析授权UUID列表
                 let authorizedUuids = [];
                 if (authorizedUuidsInput) {
                     authorizedUuids = authorizedUuidsInput.split(',')
@@ -1705,8 +1702,6 @@
                 
                 // 2. 加密数据
                 updateEncryptProgress(30);
-                
-                // 确保使用最新的授权列表
                 const encryptedData = await secureEncrypt(textInput, deviceId, authorizedUuids);
                 updateEncryptProgress(70);
                 
@@ -1749,9 +1744,9 @@
                 // 2. 压缩数据
                 const compressedData = pako.deflate(textData);
                 
-                // 3. 生成第一层加密密钥和IV
+                // 极. 生成第一层加密密钥和IV
                 const layer1Key = crypto.getRandomValues(new Uint8Array(16));
-                const layer1Iv = crypto.getRandomValues(new Uint8Array(16));
+                const layer1Iv = crypto.getRandomValues(new Uint极Array(16));
                 
                 // 4. 第一层加密
                 const layer1Encrypted = xorDecrypt(compressedData, [...layer1Key, ...layer1Iv]);
@@ -1798,7 +1793,7 @@
                 // 8. 生成第二层加密密钥
                 const deviceHash = await crypto.subtle.digest('SHA-256', encoder.encode(deviceId));
                 const deviceHashBytes = new Uint8Array(deviceHash);
-                const layer2Key = deviceHashBytes.slice(0, 16);
+                const layer2Key极 = deviceHashBytes.slice(0, 16);
                 const layer2Iv = deviceHashBytes.slice(16, 32);
                 
                 // 9. 第二层加密
@@ -2216,7 +2211,7 @@
             if (isError) {
                 converterStatusBox.className = 'status-box converter error';
             } else {
-                converterStatus极.className = 'status-box converter';
+                converterStatusBox.className = 'status-box converter';
             }
         }
 
@@ -2236,7 +2231,7 @@
                 }
                 
                 if (category === '音频') {
-                    for (let i = 0; i极 < options.length; i++) {
+                    for (let i = 0; i < options.length; i++) {
                         const option = options[i];
                         if (option.value !== 'mp3' && option.value !== 'wav') {
                             option.hidden = true;
@@ -2330,7 +2325,19 @@
         // 初始化应用
         document.addEventListener('DOMContentLoaded', () => {
             updateTexts();
-            updateDeviceInfo();
+            
+            // 添加错误处理
+            try {
+                updateDeviceInfo().catch(e => {
+                    console.error('初始化设备信息失败:', e);
+                    document.getElementById('device-id').textContent = translations['error-device-id'];
+                    document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
+                });
+            } catch (e) {
+                console.error('初始化错误:', e);
+                document.getElementById('device-id').textContent = translations['error-device-id'];
+                document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
+            }
             
             // 添加拖放功能
             const converterFileLabel = document.querySelector('.file-input-label');
@@ -2358,9 +2365,11 @@
                 }
             });
         });
-    </script>   
+    </script>
+  
         <footer>
             <p id="footer-text">安全文件加密解密系统 v6.0 | DZJ2 加密解决方案 | 增强版</p>
         </footer>
     </div>
-    
+</body>
+</html> 
