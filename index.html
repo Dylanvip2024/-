@@ -1413,86 +1413,88 @@
             });
         });
 
-        // 获取设备ID - 修复UUID生成机制
-        async function getDeviceId() {
+                // 获取设备ID - 修复UUID生成机制
+                async function getDeviceId() {
             try {
-                // 尝试从本地存储获取设备ID
-                const storedDeviceId = localStorage.getItem('secure_device_id');
-                if (storedDeviceId) {
-                    return storedDeviceId;
+                // 1. 优先使用localStorage存储的ID
+                const storedId = localStorage.getItem('secure_device_id');
+                if (storedId) return storedId;
+                
+                // 2. 尝试使用现代浏览器的crypto.randomUUID()
+                if (crypto.randomUUID) {
+                    const uuid = crypto.randomUUID();
+                    localStorage.setItem('secure_device_id', uuid);
+                    return uuid;
                 }
                 
-                // 使用更稳定的特征集合
-                const deviceFeatures = [
-                    navigator.userAgent,
-                    navigator.platform,
-                    screen.width,
-                    screen.height,
-                    navigator.languages[0],
-                    navigator.hardwareConcurrency,
-                    navigator.deviceMemory,
-                    new Date().getTime()
-                ].join('|');
-                
-                // 使用SHA-256生成64字符的十六进制ID
-                const encoder = new TextEncoder();
-                const data = encoder.encode(deviceFeatures);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                const deviceId = 'sec-' + hashHex;
-                
-                // 存储设备ID
-                localStorage.setItem('secure_device_id', deviceId);
-                
-                return deviceId;
+                // 3. 使用更可靠的备用方法
+                return generateStableFallbackId();
             } catch (e) {
                 console.error('获取设备ID错误:', e);
-                return generateFallbackId();
+                return generateStableFallbackId();
             }
         }
 
-        // 备用设备ID生成方法（确保64字符长度）
-        function generateFallbackId() {
-            // 使用更简单的方法生成ID
-            const fallbackInfo = [
-                navigator.userAgent,
-                navigator.platform,
-                screen.width,
-                screen.height,
-                navigator.languages[0],
-                new Date().getTime(),
-                Math.random().toString(36).substring(2, 15)
-            ].join('|');
-            
-            let hash = 0;
-            for (let i = 0; i < fallbackInfo.length; i++) {
-                const char = fallbackInfo.charCodeAt(i);
-                hash = (hash << 5) - hash + char;
-                hash = hash & hash; // 转换为32位整数
+        // 改进的备用ID生成方法
+        function generateStableFallbackId() {
+            try {
+                // 使用更稳定的特征组合
+                const components = [
+                    navigator.userAgent,
+                    navigator.platform,
+                    screen.width + 'x' + screen.height,
+                    navigator.language,
+                    new Date().getTime().toString(36),
+                    Math.random().toString(36).substring(2, 15)
+                ];
+                
+                // 生成SHA-256哈希（如果可用）
+                if (crypto.subtle && location.protocol === 'https:') {
+                    const encoder = new TextEncoder();
+                    const data = encoder.encode(components.join('|'));
+                    return crypto.subtle.digest('SHA-256', data).then(hash => {
+                        const hashArray = Array.from(new Uint8Array(hash));
+                        return 'sec-' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    });
+                }
+                
+                // 简单但稳定的替代方法
+                let hash = 0;
+                const combined = components.join('');
+                for (let i = 0; i < combined.length; i++) {
+                    const char = combined.charCodeAt(i);
+                    hash = (hash << 5) - hash + char;
+                    hash |= 0; // 转换为32位整数
+                }
+                return 'sec-' + Math.abs(hash).toString(36).padStart(16, '0');
+            } catch (e) {
+                // 终极备用方案
+                return 'sec-' + Date.now().toString(36) + Math.random().toString(36).substring(2, 10);
             }
-            
-            // 生成64字符的十六进制ID
-            const hexString = Math.abs(hash).toString(16).padStart(16, '0');
-            return 'sec-' + hexString.repeat(4).substring(0, 64);
         }
 
-        // 更新设备信息
+        // 更新初始化函数
         async function updateDeviceInfo() {
             try {
                 deviceId = await getDeviceId();
-                const platform = navigator.platform;
                 
-                // 更新设备ID显示
+                // 确保ID长度正确
+                if (!deviceId.startsWith('sec-')) {
+                    deviceId = 'sec-' + deviceId;
+                }
+                if (deviceId.length < 16) {
+                    deviceId = deviceId.padEnd(16, '0');
+                }
+                
+                // 更新显示
                 document.getElementById('device-id').textContent = deviceId;
                 document.getElementById('device-id-encrypt').textContent = deviceId;
-                
-                // 更新平台信息
-                document.getElementById('platform').value = platform;
+                document.getElementById('platform').value = navigator.platform || '未知';
             } catch (e) {
                 console.error('更新设备信息错误:', e);
-                document.getElementById('device-id').textContent = translations['error-device-id'];
-                document.getElementById('device-id-encrypt').textContent = translations['error-device-id'];
+                const fallbackId = 'sec-' + Date.now().toString(36);
+                document.getElementById('device-id').textContent = fallbackId;
+                document.getElementById('device-id-encrypt').textContent = fallbackId;
                 document.getElementById('platform').value = '未知';
             }
         }
@@ -2395,6 +2397,21 @@
         // 初始化应用
         document.addEventListener('DOMContentLoaded', () => {
             updateTexts();
+            updateDeviceInfo();
+
+
+                    document.getElementById('device-id').textContent = '正在获取设备ID...';
+            document.getElementById('device-id-encrypt').textContent = '正在获取设备ID...';
+            
+            // 添加超时处理
+            setTimeout(() => {
+                if (!deviceId) {
+                    document.getElementById('device-id').textContent = '使用备用ID';
+                    document.getElementById('device-id-encrypt').textContent = '使用备用ID';
+                }
+            }, 3000);
+            
+            // 调用更新函数
             updateDeviceInfo();
             
             // 添加拖放功能
